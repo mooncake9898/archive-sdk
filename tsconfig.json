@@ -12,7 +12,12 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": [
+        "src/*"
+      ],
+      "@test/*": [
+        "test/*"
+      ]
     }
   },
   "include": ["src"]

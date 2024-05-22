@@ -1,0 +1,1 @@
+{"version":3,"file":"nullOpGasOracle.js","sourceRoot":"","sources":["../../../../src/blueprint/common/gas/nullOpGasOracle.ts"],"names":[],"mappings":";;;;;;AAEA,gEAAqC;AAErC,MAAa,eAAe;IAC1B,YAAY,CAAC,GAAuB;QAClC,OAAO,OAAO,CAAC,OAAO,CAAC,IAAA,sBAAS,EAAC,CAAC,CAAC,CAAC,CAAC;IACvC,CAAC;CACF;AAJD,0CAIC"}
