@@ -17,4 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./APLogger"), exports);
 __exportStar(require("./KafkaManager"), exports);
 __exportStar(require("./LoggerManager"), exports);
+__exportStar(require("./types"), exports);
 //# sourceMappingURL=index.js.map
