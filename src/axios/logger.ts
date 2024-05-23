@@ -13,6 +13,6 @@ export enum LogLevel {
 
 export class ArchiveLogger extends LoggerManager {
   public static getDefaultBlueprintIdentifier(): string {
-    return '@src/axios-default';
+    return 'archive-axios-default';
   }
 }

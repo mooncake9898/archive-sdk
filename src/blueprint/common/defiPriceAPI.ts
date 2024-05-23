@@ -3,7 +3,7 @@ import { BTC_ADDRESS_MAINNET, ETH_ADDRESS_MAINNET } from '../models/constants';
 import { TokenPriceDto } from '../models/tokenPriceDto';
 import { generateAxiosErrorMessage, getRequestHeaders } from './requestUtils';
 // import { transformProviderKey } from '@src/common/lib/utils';
-import { CacheDuration } from '@src/axios';
+import { CacheDuration } from '../../axios';
 import axios from 'axios';
 
 export class DefiPriceAPI {

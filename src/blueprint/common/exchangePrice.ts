@@ -3,7 +3,7 @@ import { BlueprintContext } from '../models/blueprintContext';
 import { NetworkConfig } from './config/networkConfig';
 import { DefiPriceAPI } from './defiPriceAPI';
 // import { WEVMOS_ADDRESS_EVMOS_CHAIN } from '@src/extensions/evmos_staking/constants';
-import { CHAINID } from '@src/constants';
+import { CHAINID } from '../../constants';
 
 export class ExchangePrice {
   

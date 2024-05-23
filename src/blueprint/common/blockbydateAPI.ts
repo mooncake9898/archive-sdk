@@ -1,6 +1,6 @@
 import { BlueprintContext } from '../models/blueprintContext';
 import { generateAxiosErrorMessage, getRequestHeaders } from './requestUtils';
-import { CacheDuration } from '@src/axios';
+import { CacheDuration } from '../../axios';
 import axios from 'axios';
 
 export class BlockbydateAPI {

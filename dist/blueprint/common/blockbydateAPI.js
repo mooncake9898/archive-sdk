@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlockbydateAPI = void 0;
 const requestUtils_1 = require("./requestUtils");
-const axios_1 = require("@src/axios");
+const axios_1 = require("../../axios");
 const axios_2 = __importDefault(require("axios"));
 class BlockbydateAPI {
     constructor(context) {

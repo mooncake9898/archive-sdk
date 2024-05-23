@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CeloNetworkConfig = void 0;
 const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
-const constants_1 = require("@src/constants");
+const constants_1 = require("../../../constants");
 class CeloNetworkConfig extends baseEvmNetworkConfig_1.BaseEvmNetworkConfig {
     getInitStartBlock() {
         return 5272596;

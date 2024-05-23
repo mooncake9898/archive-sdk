@@ -2,7 +2,7 @@ import { BlueprintContext } from '../models';
 import { formatAsDecimalAwareString } from './utils';
 import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
-import { executeCallOrSend } from '@src/web3-wrapper';
+import { executeCallOrSend } from '../..//web3-wrapper';
 
 // Please set your favorable and reliable RPC URLs
 const rpcUrls = ['https://polygon-rpc.com', 'https://rpc.ankr.com/polygon'];

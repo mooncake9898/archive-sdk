@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolanaNetworkConfig = void 0;
 const nullOpBlockTimeOracle_1 = require("../blocktime/nullOpBlockTimeOracle");
 const nullOpGasOracle_1 = require("../gas/nullOpGasOracle");
-const constants_1 = require("@src/constants");
+const constants_1 = require("../../../constants");
 const solanaTokenMetadataOracle_1 = require("../token/solanaTokenMetadataOracle");
 class SolanaNetworkConfig {
     getInitStartBlock() {

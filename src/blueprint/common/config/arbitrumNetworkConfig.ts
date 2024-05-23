@@ -1,5 +1,5 @@
 import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
-import { CHAINID } from '@src/constants';
+import { CHAINID } from '../../../constants';
 
 export class ArbitrumNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {

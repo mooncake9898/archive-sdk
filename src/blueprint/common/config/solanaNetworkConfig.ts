@@ -4,7 +4,8 @@ import { GasOracle } from '../gas/gasOracle';
 import { NullOpGasOracle } from '../gas/nullOpGasOracle';
 import { TokenMetadataOracle } from '../token/tokenMetadataOracle';
 import { NetworkConfig } from './networkConfig';
-import { CHAINID } from '@src/constants';
+import { CHAINID } from '../../../constants';
+
 import { BlueprintContext } from '../../models';
 import { SolanaTokenMetadataOracle } from '../token/solanaTokenMetadataOracle';
 

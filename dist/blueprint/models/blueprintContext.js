@@ -17,7 +17,7 @@ const mumbaiNetworkConfig_1 = require("../common/config/mumbaiNetworkConfig");
 const optimismNetworkConfig_1 = require("../common/config/optimismNetworkConfig");
 const xdaiNetworkConfig_1 = require("../common/config/xdaiNetworkConfig");
 const exchangePrice_1 = require("../common/exchangePrice");
-const constants_1 = require("@src/constants");
+const constants_1 = require("../../constants");
 const solanaNetworkConfig_1 = require("../common/config/solanaNetworkConfig");
 class BlueprintContext {
     constructor(blueprintKey, networkId, loggingContext) {

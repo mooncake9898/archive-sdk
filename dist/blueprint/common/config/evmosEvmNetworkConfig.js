@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EvmosEvmNetworkConfig = void 0;
 const evmGasOracle_1 = require("../gas/evmGasOracle");
 const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
-const constants_1 = require("@src/constants");
+const constants_1 = require("../../../constants");
 class EvmosEvmNetworkConfig extends baseEvmNetworkConfig_1.BaseEvmNetworkConfig {
     getInitStartBlock() {
         return 1;

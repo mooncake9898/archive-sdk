@@ -14,7 +14,7 @@ var LogLevel;
 })(LogLevel || (exports.LogLevel = LogLevel = {}));
 class ArchiveLogger extends logging_1.LoggerManager {
     static getDefaultBlueprintIdentifier() {
-        return '@src/axios-default';
+        return 'archive-axios-default';
     }
 }
 exports.ArchiveLogger = ArchiveLogger;

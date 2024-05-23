@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExchangePrice = void 0;
 const defiPriceAPI_1 = require("./defiPriceAPI");
 // import { WEVMOS_ADDRESS_EVMOS_CHAIN } from '@src/extensions/evmos_staking/constants';
-const constants_1 = require("@src/constants");
+const constants_1 = require("../../constants");
 class ExchangePrice {
     constructor(context) {
         this.context = context;

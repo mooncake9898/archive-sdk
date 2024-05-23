@@ -16,7 +16,7 @@ exports.EvmContractReader = void 0;
 const utils_1 = require("./utils");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 const ethers_1 = require("ethers");
-const web3_wrapper_1 = require("@src/web3-wrapper");
+const web3_wrapper_1 = require("../..//web3-wrapper");
 // Please set your favorable and reliable RPC URLs
 const rpcUrls = ['https://polygon-rpc.com', 'https://rpc.ankr.com/polygon'];
 class EvmContractReader {

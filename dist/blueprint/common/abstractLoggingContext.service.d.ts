@@ -1,5 +1,5 @@
 import { Logger } from 'log4js';
-import { Queues } from '@src/logging/types';
+import { Queues } from '../../logging/types';
 export declare const REQUEST_ID = "requestId";
 export declare class AbstractLoggingContext {
     private _requestId;

@@ -2,7 +2,7 @@
 import { ArchiveLogger } from '../common/archiveLogger';
 // import { VisionCache } from '@src/common/visionCache';
 import { Logger } from 'log4js';
-import { Queues } from '@src/logging/types';
+import { Queues } from '../../logging/types';
 
 export const REQUEST_ID = 'requestId';
 

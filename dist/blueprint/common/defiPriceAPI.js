@@ -17,7 +17,7 @@ const constants_1 = require("../models/constants");
 const tokenPriceDto_1 = require("../models/tokenPriceDto");
 const requestUtils_1 = require("./requestUtils");
 // import { transformProviderKey } from '@src/common/lib/utils';
-const axios_1 = require("@src/axios");
+const axios_1 = require("../../axios");
 const axios_2 = __importDefault(require("axios"));
 class DefiPriceAPI {
     constructor(context) {
