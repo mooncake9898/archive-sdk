@@ -18,6 +18,7 @@ export * from './tokenInfo';
 export * from './tokenMetadata';
 export * from './tokenMetadataOracle';
 export * from './tokenType';
+export * from './tokenPriceDto';
 export * from './transactionDetails';
 export * from './userProtocolPosition.entity';
 export * from './userProtocolPositionException.entity';

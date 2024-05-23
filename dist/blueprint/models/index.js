@@ -34,6 +34,7 @@ __exportStar(require("./tokenInfo"), exports);
 __exportStar(require("./tokenMetadata"), exports);
 __exportStar(require("./tokenMetadataOracle"), exports);
 __exportStar(require("./tokenType"), exports);
+__exportStar(require("./tokenPriceDto"), exports);
 __exportStar(require("./transactionDetails"), exports);
 __exportStar(require("./userProtocolPosition.entity"), exports);
 __exportStar(require("./userProtocolPositionException.entity"), exports);
