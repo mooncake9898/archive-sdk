@@ -38,30 +38,25 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                 if (!selectedRpcUrl) {
                     continue;
                 }
-                return this.execute(selectedRpcUrl);
+                try {
+                    const start = perf_hooks_1.performance.now();
+                    const result = yield this.rpcProviderFn(this.isOptimismOrBaseNetwork(String(this.networkId))
+                        ? (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider(selectedRpcUrl))
+                        : new ethers_1.ethers.providers.StaticJsonRpcProvider(selectedRpcUrl));
+                    const end = perf_hooks_1.performance.now();
+                    const kafkaManager = logging_1.KafkaManager.getInstance();
+                    if (kafkaManager)
+                        kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+                    return result;
+                }
+                catch (error) {
+                    const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+                    this.logger.error(errorMessage);
+                }
             }
             const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;
             this.logger.error(errorMessage);
             return null;
-        });
-    }
-    execute(rpcUrl) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const start = perf_hooks_1.performance.now();
-                const result = yield this.rpcProviderFn(this.isOptimismOrBaseNetwork(String(this.networkId))
-                    ? (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider(rpcUrl))
-                    : new ethers_1.ethers.providers.StaticJsonRpcProvider(rpcUrl));
-                const end = perf_hooks_1.performance.now();
-                const kafkaManager = logging_1.KafkaManager.getInstance();
-                if (kafkaManager)
-                    kafkaManager.sendRpcResponseTimeToKafka(rpcUrl, end - start, this.requestId);
-                return result;
-            }
-            catch (error) {
-                const errorMessage = this.getErrorMessage(error, rpcUrl);
-                this.logger.error(errorMessage);
-            }
         });
     }
     isOptimismOrBaseNetwork(networkId) {

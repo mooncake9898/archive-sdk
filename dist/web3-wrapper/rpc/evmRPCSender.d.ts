@@ -10,6 +10,5 @@ export declare class EvmRPCSender extends AbstractRPCSender {
     private logger;
     constructor(rpcUrls: string[], networkId: number | string, rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>, requestId?: string, attemptFallback?: boolean);
     executeWithFallbacks(): Promise<any>;
-    private execute;
     private isOptimismOrBaseNetwork;
 }
