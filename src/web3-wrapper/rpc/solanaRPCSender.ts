@@ -35,25 +35,21 @@ export class SolanaRPCSender extends AbstractRPCSender {
       if (!selectedRpcUrl) {
         continue;
       }
-      return this.execute(selectedRpcUrl);
+      try {
+        const start = performance.now();
+        const result = await this.rpcProviderFn(new web3_solana.Connection(selectedRpcUrl));
+        const end = performance.now();
+        const kafkaManager = KafkaManager.getInstance();
+        if (kafkaManager) kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+        return result;
+      } catch (error) {
+        const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+        this.logger.error(errorMessage);
+      }
     }
 
     const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
-  }
-
-  private async execute(rpcUrl: string) {
-    try {
-      const start = performance.now();
-      const result = await this.rpcProviderFn(new web3_solana.Connection(rpcUrl));
-      const end = performance.now();
-      const kafkaManager = KafkaManager.getInstance();
-      if (kafkaManager) kafkaManager.sendRpcResponseTimeToKafka(rpcUrl, end - start, this.requestId);
-      return result;
-    } catch (error) {
-      const errorMessage = this.getErrorMessage(error, rpcUrl);
-      this.logger.error(errorMessage);
-    }
   }
 }

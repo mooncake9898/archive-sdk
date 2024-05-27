@@ -10,5 +10,4 @@ export declare class SolanaRPCSender extends AbstractRPCSender {
     private logger;
     constructor(rpcUrls: string[], networkId: number | string, rpcProviderFn: (conn: web3_solana.Connection) => Promise<any>, requestId?: string, attemptFallback?: boolean);
     executeWithFallbacks(): Promise<any>;
-    private execute;
 }
