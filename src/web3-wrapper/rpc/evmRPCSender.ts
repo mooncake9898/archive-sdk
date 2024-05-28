@@ -1,19 +1,18 @@
-import {CHAINID} from '../../constants';
-import {RPCOracle} from "./rpcOracle";
-import {ArchiveLogger, REQUEST_ID} from "../logger";
-import {performance} from "perf_hooks";
-import {asL2Provider} from "@eth-optimism/sdk";
-import {ethers} from "ethers";
-import {KafkaManager} from "../../logging";
-import {Logger} from 'log4js';
-import {AbstractRPCSender} from "./abstractRPCSender";
-
+import { CHAINID } from '../../constants';
+import { KafkaManager } from '../../logging';
+import { ArchiveLogger, REQUEST_ID } from '../logger';
+import { AbstractRPCSender } from './abstractRPCSender';
+import { RPCOracle } from './rpcOracle';
+import { asL2Provider } from '@eth-optimism/sdk';
+import { ethers } from 'ethers';
+import { Logger } from 'log4js';
+import { performance } from 'perf_hooks';
 
 export class EvmRPCSender extends AbstractRPCSender {
-
   private rpcOracle: RPCOracle;
   private maxAttempts: number;
   private logger: Logger;
+  private timeoutMilliseconds = 10000;
 
   constructor(
     rpcUrls: string[],
@@ -41,8 +40,16 @@ export class EvmRPCSender extends AbstractRPCSender {
         const start = performance.now();
         const result = await this.rpcProviderFn(
           this.isOptimismOrBaseNetwork(String(this.networkId))
-            ? asL2Provider(new ethers.providers.StaticJsonRpcProvider(selectedRpcUrl))
-            : new ethers.providers.StaticJsonRpcProvider(selectedRpcUrl),
+            ? asL2Provider(
+                new ethers.providers.StaticJsonRpcProvider({
+                  url: selectedRpcUrl,
+                  timeout: this.timeoutMilliseconds,
+                }),
+              )
+            : new ethers.providers.StaticJsonRpcProvider({
+                url: selectedRpcUrl,
+                timeout: this.timeoutMilliseconds,
+              }),
         );
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
@@ -55,7 +62,9 @@ export class EvmRPCSender extends AbstractRPCSender {
       }
     }
 
-    const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;
+    const errorMessage = `All RPCs failed for networkId: ${
+      this.networkId
+    }, function called: ${this.rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }
@@ -63,5 +72,4 @@ export class EvmRPCSender extends AbstractRPCSender {
   private isOptimismOrBaseNetwork(networkId: string): boolean {
     return networkId === CHAINID.OPTIMISM || networkId === CHAINID.BASE;
   }
-
 }
