@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EvmRPCSender = void 0;
 const constants_1 = require("../../constants");
-const rpcOracle_1 = require("./rpcOracle");
+const logging_1 = require("../../logging");
 const logger_1 = require("../logger");
-const perf_hooks_1 = require("perf_hooks");
+const abstractRPCSender_1 = require("./abstractRPCSender");
+const rpcOracle_1 = require("./rpcOracle");
 const sdk_1 = require("@eth-optimism/sdk");
 const ethers_1 = require("ethers");
-const logging_1 = require("../../logging");
-const abstractRPCSender_1 = require("./abstractRPCSender");
+const perf_hooks_1 = require("perf_hooks");
 class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
     constructor(rpcUrls, networkId, rpcProviderFn, requestId, attemptFallback = true) {
         super();
@@ -25,6 +25,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         this.rpcProviderFn = rpcProviderFn;
         this.requestId = requestId;
         this.attemptFallback = attemptFallback;
+        this.timeoutMilliseconds = 10000;
         this.rpcOracle = new rpcOracle_1.RPCOracle(networkId, rpcUrls);
         this.maxAttempts = this.attemptFallback ? this.rpcOracle.getRpcCount() : 1;
         this.logger = logger_1.ArchiveLogger.getLogger();
@@ -41,8 +42,14 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                 try {
                     const start = perf_hooks_1.performance.now();
                     const result = yield this.rpcProviderFn(this.isOptimismOrBaseNetwork(String(this.networkId))
-                        ? (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider(selectedRpcUrl))
-                        : new ethers_1.ethers.providers.StaticJsonRpcProvider(selectedRpcUrl));
+                        ? (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
+                            url: selectedRpcUrl,
+                            timeout: this.timeoutMilliseconds,
+                        }))
+                        : new ethers_1.ethers.providers.StaticJsonRpcProvider({
+                            url: selectedRpcUrl,
+                            timeout: this.timeoutMilliseconds,
+                        }));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
                     if (kafkaManager)
