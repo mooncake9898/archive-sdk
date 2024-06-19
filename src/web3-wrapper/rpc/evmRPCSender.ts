@@ -36,6 +36,7 @@ export class EvmRPCSender extends AbstractRPCSender {
       if (!selectedRpcUrl) {
         continue;
       }
+      const kafkaManager = KafkaManager.getInstance();
       try {
         const start = performance.now();
         const result = await this.rpcProviderFn(
@@ -53,12 +54,19 @@ export class EvmRPCSender extends AbstractRPCSender {
         );
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        if (kafkaManager) kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
 
         return result;
       } catch (error) {
         const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
         this.logger.error(errorMessage);
+        kafkaManager?.sendRpcFailureToKafka(
+          selectedRpcUrl,
+          String(this.networkId),
+          this.rpcProviderFn,
+          error,
+          this.requestId,
+        );
       }
     }
 

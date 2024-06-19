@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolanaRPCSender = void 0;
-const rpcOracle_1 = require("./rpcOracle");
-const logger_1 = require("../logger");
-const perf_hooks_1 = require("perf_hooks");
 const logging_1 = require("../../logging");
+const logger_1 = require("../logger");
 const abstractRPCSender_1 = require("./abstractRPCSender");
+const rpcOracle_1 = require("./rpcOracle");
 const web3_js_1 = __importDefault(require("@solana/web3.js"));
+const perf_hooks_1 = require("perf_hooks");
 class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
     constructor(rpcUrls, networkId, rpcProviderFn, requestId, attemptFallback = true) {
         super();
@@ -44,8 +44,7 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     const result = yield this.rpcProviderFn(new web3_js_1.default.Connection(selectedRpcUrl));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    if (kafkaManager)
-                        kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
                     return result;
                 }
                 catch (error) {

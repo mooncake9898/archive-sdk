@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KafkaManager = void 0;
 const kafkaConfig_1 = require("./kafkaConfig");
-const kafkajs_1 = require("kafkajs");
 const types_1 = require("./types");
+const kafkajs_1 = require("kafkajs");
 class KafkaManager {
     constructor(kafkaConfig) {
         this._isConnected = false;
@@ -110,6 +110,27 @@ class KafkaManager {
             };
             const responseTimeQueuesAsJson = this.stringifyQueues([responseTime]);
             this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
+        });
+    }
+    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, errorResponse, requestId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!['staging', 'production'].includes(process.env.NODE_ENV))
+                return;
+            const timestamp = Math.floor(new Date().getTime());
+            rpcProviderFn.toString();
+            const rpcFailure = {
+                rpcEndpoint,
+                networkId,
+                calledFunction: rpcProviderFn.toString(),
+                errorResponse,
+                timestamp,
+                extras: {
+                    requestId: requestId,
+                    nodeEnv: process.env.NODE_ENV,
+                },
+            };
+            const rpcCallAsJson = this.stringifyQueues([rpcFailure]);
+            this.sendMessage(types_1.Queues.RPC_FAILURE, rpcCallAsJson);
         });
     }
     sendLogs(msgs, topic = types_1.Queues.LOGS) {

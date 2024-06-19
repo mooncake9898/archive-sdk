@@ -39,6 +39,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                 if (!selectedRpcUrl) {
                     continue;
                 }
+                const kafkaManager = logging_1.KafkaManager.getInstance();
                 try {
                     const start = perf_hooks_1.performance.now();
                     const result = yield this.rpcProviderFn(this.isOptimismOrBaseNetwork(String(this.networkId))
@@ -52,13 +53,13 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                         }));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    if (kafkaManager)
-                        kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
                     return result;
                 }
                 catch (error) {
                     const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
                     this.logger.error(errorMessage);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpcUrl, String(this.networkId), this.rpcProviderFn, error, this.requestId);
                 }
             }
             const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;

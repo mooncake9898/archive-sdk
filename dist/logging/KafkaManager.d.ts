@@ -1,6 +1,7 @@
 import { MyRequestConfig } from './config/axios.config';
-import { Consumer, KafkaConfig, Message, Producer } from 'kafkajs';
 import { LogQueue, Queues } from './types';
+import { ethers } from 'ethers';
+import { Consumer, KafkaConfig, Message, Producer } from 'kafkajs';
 export declare class KafkaManager {
     private static instance;
     static producer: Producer;
@@ -19,6 +20,7 @@ export declare class KafkaManager {
     get consumer(): Consumer;
     sendResponseTimeToKafka(config: MyRequestConfig, status: number, blueprintId: string, requestId?: string, responseTimesTopic?: Queues): Promise<void>;
     sendRpcResponseTimeToKafka(rpcUrl: string, requestDuration: number, requestId?: string, responseTimesTopic?: Queues): Promise<void>;
+    sendRpcFailureToKafka(rpcEndpoint: string, networkId: string, rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>, errorResponse: any, requestId?: string): Promise<void>;
     private stringifyQueues;
     sendLogs(msgs: LogQueue[], topic?: Queues): Promise<void>;
     sendMessage(topic: string, messages: Message[]): Promise<void>;

@@ -1,14 +1,12 @@
-import {RPCOracle} from "./rpcOracle";
-import {ArchiveLogger, REQUEST_ID} from "../logger";
-import {performance} from "perf_hooks";
-import {KafkaManager} from "../../logging";
-import {Logger} from 'log4js';
-import {AbstractRPCSender} from "./abstractRPCSender";
+import { KafkaManager } from '../../logging';
+import { ArchiveLogger, REQUEST_ID } from '../logger';
+import { AbstractRPCSender } from './abstractRPCSender';
+import { RPCOracle } from './rpcOracle';
 import web3_solana from '@solana/web3.js';
-
+import { Logger } from 'log4js';
+import { performance } from 'perf_hooks';
 
 export class SolanaRPCSender extends AbstractRPCSender {
-
   private rpcOracle: RPCOracle;
   private maxAttempts: number;
   private logger: Logger;
@@ -40,7 +38,7 @@ export class SolanaRPCSender extends AbstractRPCSender {
         const result = await this.rpcProviderFn(new web3_solana.Connection(selectedRpcUrl));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        if (kafkaManager) kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
         return result;
       } catch (error) {
         const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
@@ -48,7 +46,9 @@ export class SolanaRPCSender extends AbstractRPCSender {
       }
     }
 
-    const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;
+    const errorMessage = `All RPCs failed for networkId: ${
+      this.networkId
+    }, function called: ${this.rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }

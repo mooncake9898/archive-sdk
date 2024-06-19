@@ -1,7 +1,8 @@
 import { MyRequestConfig } from './config/axios.config';
 import { defaultKafkaConfig } from './kafkaConfig';
+import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailure } from './types';
+import { ethers } from 'ethers';
 import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
-import { BaseQueue, LogQueue, Queues, ResponseTimeQueue } from './types';
 
 export class KafkaManager {
   private static instance: KafkaManager;
@@ -119,6 +120,34 @@ export class KafkaManager {
     const responseTimeQueuesAsJson = this.stringifyQueues([responseTime]);
 
     this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
+  }
+
+  async sendRpcFailureToKafka(
+    rpcEndpoint: string,
+    networkId: string,
+    rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>,
+    errorResponse: any,
+    requestId?: string,
+  ): Promise<void> {
+    if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
+    const timestamp = Math.floor(new Date().getTime());
+    rpcProviderFn.toString();
+
+    const rpcFailure = {
+      rpcEndpoint,
+      networkId,
+      calledFunction: rpcProviderFn.toString(),
+      errorResponse,
+      timestamp,
+      extras: {
+        requestId: requestId,
+        nodeEnv: process.env.NODE_ENV,
+      },
+    } as RpcFailure;
+
+    const rpcCallAsJson = this.stringifyQueues([rpcFailure]);
+
+    this.sendMessage(Queues.RPC_FAILURE, rpcCallAsJson);
   }
 
   private stringifyQueues = (array: BaseQueue[]) =>

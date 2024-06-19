@@ -1,5 +1,5 @@
-import { executeCallOrSend } from '../../src/web3-wrapper';
 import { CHAINID } from '../../src/constants';
+import { executeCallOrSend } from '../../src/web3-wrapper';
 
 describe('utils functions', () => {
   const testRequestId = '03a0bfdc-9bcf-4436-a200-c85e11b3926c';
