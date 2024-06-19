@@ -12,5 +12,6 @@ var Queues;
     Queues["RESPONSE_TIMES"] = "response_times";
     Queues["SAMPLES"] = "samples";
     Queues["BILLING"] = "billing";
+    Queues["RPC_FAILURE"] = "rpc_failure";
 })(Queues || (exports.Queues = Queues = {}));
 //# sourceMappingURL=types.js.map

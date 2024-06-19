@@ -4,7 +4,8 @@ export declare enum Queues {
     EXTERNAL_API_CALLS = "external_api_calls",
     RESPONSE_TIMES = "response_times",
     SAMPLES = "samples",
-    BILLING = "billing"
+    BILLING = "billing",
+    RPC_FAILURE = "rpc_failure"
 }
 export interface BillingQueue extends BaseQueue, BlueprintSessionQueue {
     consumerId?: string;
@@ -20,6 +21,12 @@ export interface ResponseTimeQueue extends BaseQueue {
     indexerId: string;
     responseTimeMs: number;
     responseStatusCode: number;
+}
+export interface RpcFailureQueue extends BaseQueue {
+    rpcEndpoint: string;
+    networkId: string;
+    calledFunction: string;
+    errorMessage: string;
 }
 export interface ExternalAPICallQueue extends BaseQueue, BlueprintSessionQueue {
     url: string;
