@@ -64,7 +64,7 @@ export class EvmRPCSender extends AbstractRPCSender {
           selectedRpcUrl,
           String(this.networkId),
           this.rpcProviderFn,
-          error,
+          error.message,
           this.requestId,
         );
       }

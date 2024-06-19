@@ -112,7 +112,7 @@ class KafkaManager {
             this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
         });
     }
-    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, errorResponse, requestId) {
+    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, errorMessage, requestId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
@@ -122,7 +122,7 @@ class KafkaManager {
                 rpcEndpoint,
                 networkId,
                 calledFunction: rpcProviderFn.toString(),
-                errorResponse,
+                errorMessage,
                 timestamp,
                 extras: {
                     requestId: requestId,

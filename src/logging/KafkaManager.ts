@@ -126,7 +126,7 @@ export class KafkaManager {
     rpcEndpoint: string,
     networkId: string,
     rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>,
-    errorResponse: any,
+    errorMessage: string,
     requestId?: string,
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
@@ -137,7 +137,7 @@ export class KafkaManager {
       rpcEndpoint,
       networkId,
       calledFunction: rpcProviderFn.toString(),
-      errorResponse,
+      errorMessage,
       timestamp,
       extras: {
         requestId: requestId,
