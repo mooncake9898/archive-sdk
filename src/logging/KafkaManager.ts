@@ -1,6 +1,6 @@
 import { MyRequestConfig } from './config/axios.config';
 import { defaultKafkaConfig } from './kafkaConfig';
-import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailure } from './types';
+import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailureQueue } from './types';
 import { ethers } from 'ethers';
 import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
 
@@ -143,7 +143,7 @@ export class KafkaManager {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
       },
-    } as RpcFailure;
+    } as RpcFailureQueue;
 
     const rpcCallAsJson = this.stringifyQueues([rpcFailure]);
 

@@ -22,7 +22,7 @@ export interface ResponseTimeQueue extends BaseQueue {
     responseTimeMs: number;
     responseStatusCode: number;
 }
-export interface RpcFailure extends BaseQueue {
+export interface RpcFailureQueue extends BaseQueue {
     rpcEndpoint: string;
     networkId: string;
     calledFunction: string;
