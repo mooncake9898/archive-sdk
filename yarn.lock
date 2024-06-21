@@ -1425,6 +1425,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lukeed/csprng@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "@lukeed/csprng@npm:1.1.0"
+  checksum: 926f5f7fc629470ca9a8af355bfcd0271d34535f7be3890f69902432bddc3262029bb5dbe9025542cf6c9883d878692eef2815fc2f3ba5b92e9da1f9eba2e51b
+  languageName: node
+  linkType: hard
+
 "@mischnic/json-sourcemap@npm:^0.1.0":
   version: 0.1.1
   resolution: "@mischnic/json-sourcemap@npm:0.1.1"
@@ -1475,6 +1482,27 @@ __metadata:
   version: 3.0.2
   resolution: "@msgpackr-extract/msgpackr-extract-win32-x64@npm:3.0.2"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@nestjs/common@npm:^10.3.9":
+  version: 10.3.9
+  resolution: "@nestjs/common@npm:10.3.9"
+  dependencies:
+    iterare: 1.2.1
+    tslib: 2.6.2
+    uid: 2.0.2
+  peerDependencies:
+    class-transformer: "*"
+    class-validator: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    class-transformer:
+      optional: true
+    class-validator:
+      optional: true
+  checksum: c362f2717888626ea3360b280dd42d8d173e3d6640615b9f76c6b202b33534daac362a224ee0be8c16f1270b9891172c3684396a02b06b8309a84342fd1177bc
   languageName: node
   linkType: hard
 
@@ -3249,6 +3277,7 @@ __metadata:
     "@eth-optimism/sdk": ^3.1.8
     "@fluffy-spoon/substitute": 1.208.0
     "@golevelup/ts-jest": 0.4.0
+    "@nestjs/common": ^10.3.9
     "@parcel/core": 2.10.1
     "@parcel/packager-ts": 2.10.1
     "@parcel/transformer-typescript-types": 2.10.1
@@ -3258,6 +3287,7 @@ __metadata:
     "@types/node": 20.6.0
     "@typescript-eslint/eslint-plugin": 6.7.0
     "@typescript-eslint/parser": 6.7.0
+    async-redis: 1.1.7
     axios: ^1.6.2
     axios-cache-interceptor: 1.3.2
     axios-mock-adapter: 1.22.0
@@ -3401,6 +3431,16 @@ __metadata:
   version: 1.1.0
   resolution: "assertion-error@npm:1.1.0"
   checksum: fd9429d3a3d4fd61782eb3962ae76b6d08aa7383123fca0596020013b3ebd6647891a85b05ce821c47d1471ed1271f00b0545cf6a4326cf2fc91efcc3b0fbecf
+  languageName: node
+  linkType: hard
+
+"async-redis@npm:1.1.7":
+  version: 1.1.7
+  resolution: "async-redis@npm:1.1.7"
+  dependencies:
+    redis: ^2.8.0
+    redis-commands: ^1.3.1
+  checksum: 54d7fb195386fef78dfa9f02e43992fee17fa047becdc0d41b2e52d3f6e297a9768cc2be27fd20df4ca38f3344a3799e2f93b6e3ebd62391966eea9ad8cb21d7
   languageName: node
   linkType: hard
 
@@ -4414,6 +4454,13 @@ __metadata:
   version: 7.0.0
   resolution: "dotenv@npm:7.0.0"
   checksum: 18a7b3ef0e90fd6fcce7c7cbdd48d923b0cb180807540b80c797bda4a098097e17820d6315ae28eec22f73954cd0ab9d81904d46370183817c09f694d40566ff
+  languageName: node
+  linkType: hard
+
+"double-ended-queue@npm:^2.1.0-0":
+  version: 2.1.0-0
+  resolution: "double-ended-queue@npm:2.1.0-0"
+  checksum: 3030cf9dcf6f8e7d8cb6ae5b7304890445d7c32233a614e400ba7b378086ad76f5822d0e501afd5ffe0af1de4bcb842fa23d4c79174d54f6566399435fafc271
   languageName: node
   linkType: hard
 
@@ -6117,6 +6164,13 @@ __metadata:
     html-escaper: ^2.0.0
     istanbul-lib-report: ^3.0.0
   checksum: 2072db6e07bfbb4d0eb30e2700250636182398c1af811aea5032acb219d2080f7586923c09fa194029efd6b92361afb3dcbe1ebcc3ee6651d13340f7c6c4ed95
+  languageName: node
+  linkType: hard
+
+"iterare@npm:1.2.1":
+  version: 1.2.1
+  resolution: "iterare@npm:1.2.1"
+  checksum: 70bc80038e3718aa9072bc63b3a0135166d7120bde46bfcaf80a88d11005dcef1b2d69cd353849f87a3f58ba8f546a8c6e6983408236ff01fa50b52339ee5223
   languageName: node
   linkType: hard
 
@@ -8074,10 +8128,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"redis-commands@npm:^1.2.0, redis-commands@npm:^1.3.1":
+  version: 1.7.0
+  resolution: "redis-commands@npm:1.7.0"
+  checksum: d1ff7fbcb5e54768c77f731f1d49679d2a62c3899522c28addb4e2e5813aea8bcac3f22519d71d330224c3f2937f935dfc3d8dc65e90db0f5fe22dc2c1515aa7
+  languageName: node
+  linkType: hard
+
 "redis-errors@npm:^1.0.0, redis-errors@npm:^1.2.0":
   version: 1.2.0
   resolution: "redis-errors@npm:1.2.0"
   checksum: f28ac2692113f6f9c222670735aa58aeae413464fd58ccf3fce3f700cae7262606300840c802c64f2b53f19f65993da24dc918afc277e9e33ac1ff09edb394f4
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "redis-parser@npm:2.6.0"
+  checksum: 8d4936875e39d56a951e0bbb6653b4da1f7fdd727552c89561c3c78e7ffeb9c3e8820a78454e939b74d1ba20996d62ac179b4fc39d07340d10f8d52740399422
   languageName: node
   linkType: hard
 
@@ -8101,6 +8169,17 @@ __metadata:
     "@redis/search": 1.1.3
     "@redis/time-series": 1.0.5
   checksum: 1626d0d739e5f2047824b77b472967af5938fba488a039bd0a5ad90814eb81cb29b7939e16adf0bc39b133165ec1bf147e4f944d0c54a2f9c32c8f004b015940
+  languageName: node
+  linkType: hard
+
+"redis@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "redis@npm:2.8.0"
+  dependencies:
+    double-ended-queue: ^2.1.0-0
+    redis-commands: ^1.2.0
+    redis-parser: ^2.6.0
+  checksum: e44dc50a9a92ede2c95b3166482a4b04373853fdbb72ab138e834b868a3cd446798742fc0f85de2d5e442f9c86f58e1250637ea71af3ad5527478d05ef430079
   languageName: node
   linkType: hard
 
@@ -8975,7 +9054,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.4.0, tslib@npm:^2.6.2":
+"tslib@npm:2.6.2, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
@@ -9088,6 +9167,15 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 0f4da2f15e6f1245e49db15801dbee52f2bbfb267e1c39225afdab5afee1a72839cd86000e65ee9d7e4dfaff12239d28beaf5ee431357fcced15fb08583d72ca
+  languageName: node
+  linkType: hard
+
+"uid@npm:2.0.2":
+  version: 2.0.2
+  resolution: "uid@npm:2.0.2"
+  dependencies:
+    "@lukeed/csprng": ^1.0.0
+  checksum: 98aabddcd6fe46f9b331b0378a93ee9cc51474348ada02006df9d10b4abc783ed596748ed9f20d7f6c5ff395dbcd1e764a65a68db6f39a31c95ae85ef13fe979
   languageName: node
   linkType: hard
 

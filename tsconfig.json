@@ -4,6 +4,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
     "strict": false,
     "skipLibCheck": true,
     "outDir": "dist",
@@ -12,12 +13,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": [
-        "src/*"
-      ],
-      "@test/*": [
-        "test/*"
-      ]
+      "@src/*": ["src/*"],
+      "@test/*": ["test/*"]
     }
   },
   "include": ["src"]
