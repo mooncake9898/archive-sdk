@@ -20,6 +20,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var VisionCache_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VisionCache = void 0;
+/**
+ * Class that's responsible for getting cached info if exists.
+ */
+// import { ApiCallResults } from './apiCallResults.entity';
+// import { AvailableNetwork } from './config/availableNetwork';
+// import { RequestContext } from './requestContext';
 const common_1 = require("@nestjs/common");
 // import { InjectRepository } from '@nestjs/typeorm';
 // import { Repository } from 'typeorm';
@@ -35,14 +41,13 @@ let VisionCache = VisionCache_1 = class VisionCache {
      * @param ttl
      * @param onCacheMiss
      */
-    cacheOrPerform(context, cacheKey, ttl, onCacheMiss) {
+    cacheOrPerform(chainId, cacheKey, ttl, onCacheMiss) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.skipCache) {
                 // we want to skip any cache on development so we don't run into caching issues
                 return yield onCacheMiss();
             }
-            // const key = this.maybeAddPrefix(context, cacheKey);
-            const key = this.maybeAddPrefix(cacheKey);
+            const key = this.maybeAddPrefix(chainId, cacheKey);
             try {
                 const cached = yield this.cache.get(key);
                 if (cached) {
@@ -67,8 +72,7 @@ let VisionCache = VisionCache_1 = class VisionCache {
                 if (entity instanceof Map && entity.size == 0) {
                     return null;
                 }
-                // await this.maybeCacheResult(ttl, context, key, entity);
-                yield this.maybeCacheResult(ttl, key, entity);
+                yield this.maybeCacheResult(ttl, chainId, key, entity);
                 return entity;
             }
             catch (e) {
@@ -77,8 +81,7 @@ let VisionCache = VisionCache_1 = class VisionCache {
             }
         });
     }
-    // private async maybeCacheResult(ttl: number, context: RequestContext, key: string, entity)
-    maybeCacheResult(ttl, key, entity) {
+    maybeCacheResult(ttl, chainId, key, entity) {
         return __awaiter(this, void 0, void 0, function* () {
             if (ttl == VisionCache_1.PERM_CACHE_DURATION) {
                 // await this.saveResultToDb(context, key, entity);
@@ -98,14 +101,12 @@ let VisionCache = VisionCache_1 = class VisionCache {
     getRestClient() {
         return this.cache;
     }
-    // private maybeAddPrefix(context: RequestContext, key: string) {
-    maybeAddPrefix(key) {
+    maybeAddPrefix(chainId, key) {
         // for non eth mainnet, add in a prefix
-        // FIXME: this
-        // if (context && context.getNetwork() != AvailableNetwork.ETHEREUM) {
-        //   const env = process.env.NODE_ENV === 'production' ? '' : process.env.NODE_ENV;
-        //   return `NETWORK_${env}::${context.getNetwork()}:${key}`;
-        // }
+        if (chainId != '1') {
+            const env = process.env.NODE_ENV === 'production' ? '' : process.env.NODE_ENV;
+            return `NETWORK_${env}::${chainId}:${key}`;
+        }
         return key;
     }
     replacer(key, value) {

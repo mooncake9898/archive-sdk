@@ -1,7 +1,3 @@
-/**
- * Class that's responsible for getting cached info if exists.
- */
-import { RequestContext } from './requestContext';
 import AsyncRedis from 'async-redis';
 export declare class VisionCache {
     private cache;
@@ -17,7 +13,7 @@ export declare class VisionCache {
      * @param ttl
      * @param onCacheMiss
      */
-    cacheOrPerform(context: RequestContext, cacheKey: string, ttl: number, onCacheMiss: any): Promise<any>;
+    cacheOrPerform(chainId: string, cacheKey: string, ttl: number, onCacheMiss: any): Promise<any>;
     private maybeCacheResult;
     getRestClient(): AsyncRedis;
     private maybeAddPrefix;

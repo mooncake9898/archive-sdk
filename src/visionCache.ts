@@ -4,7 +4,6 @@
 // import { ApiCallResults } from './apiCallResults.entity';
 // import { AvailableNetwork } from './config/availableNetwork';
 // import { RequestContext } from './requestContext';
-import { RequestContext } from './requestContext';
 import { Inject, Injectable } from '@nestjs/common';
 import AsyncRedis from 'async-redis';
 
@@ -33,14 +32,13 @@ export class VisionCache {
    * @param ttl
    * @param onCacheMiss
    */
-  async cacheOrPerform(context: RequestContext, cacheKey: string, ttl: number, onCacheMiss: any) {
+  async cacheOrPerform(chainId: string, cacheKey: string, ttl: number, onCacheMiss: any) {
     if (this.skipCache) {
       // we want to skip any cache on development so we don't run into caching issues
       return await onCacheMiss();
     }
 
-    // const key = this.maybeAddPrefix(context, cacheKey);
-    const key = this.maybeAddPrefix(cacheKey);
+    const key = this.maybeAddPrefix(chainId, cacheKey);
 
     try {
       const cached = await this.cache.get(key);
@@ -74,8 +72,7 @@ export class VisionCache {
         return null;
       }
 
-      // await this.maybeCacheResult(ttl, context, key, entity);
-      await this.maybeCacheResult(ttl, key, entity);
+      await this.maybeCacheResult(ttl, chainId, key, entity);
 
       return entity;
     } catch (e) {
@@ -84,8 +81,7 @@ export class VisionCache {
     }
   }
 
-  // private async maybeCacheResult(ttl: number, context: RequestContext, key: string, entity)
-  private async maybeCacheResult(ttl: number, key: string, entity) {
+  private async maybeCacheResult(ttl: number, chainId: string, key: string, entity) {
     if (ttl == VisionCache.PERM_CACHE_DURATION) {
       // await this.saveResultToDb(context, key, entity);
     } else if (ttl > 0) {
@@ -105,15 +101,12 @@ export class VisionCache {
     return this.cache;
   }
 
-  // private maybeAddPrefix(context: RequestContext, key: string) {
-  private maybeAddPrefix(key: string) {
+  private maybeAddPrefix(chainId: string, key: string) {
     // for non eth mainnet, add in a prefix
-
-    // FIXME: this
-    // if (context && context.getNetwork() != AvailableNetwork.ETHEREUM) {
-    //   const env = process.env.NODE_ENV === 'production' ? '' : process.env.NODE_ENV;
-    //   return `NETWORK_${env}::${context.getNetwork()}:${key}`;
-    // }
+    if (chainId != '1') {
+      const env = process.env.NODE_ENV === 'production' ? '' : process.env.NODE_ENV;
+      return `NETWORK_${env}::${chainId}:${key}`;
+    }
 
     return key;
   }
