@@ -1,15 +1,13 @@
 /**
  * Class that's responsible for getting cached info if exists.
  */
-// import { ApiCallResults } from './apiCallResults.entity';
+import { ApiCallResults } from './apiCallResults.entity';
 // import { AvailableNetwork } from './config/availableNetwork';
 // import { RequestContext } from './requestContext';
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import AsyncRedis from 'async-redis';
-
-// import { InjectRepository } from '@nestjs/typeorm';
-
-// import { Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class VisionCache {
@@ -20,7 +18,8 @@ export class VisionCache {
   private skipCache: boolean;
 
   constructor(
-    @Inject('CACHE_ETH') private cache: AsyncRedis, // @InjectRepository(ApiCallResults) private apiCallResultsRepo: Repository<ApiCallResults>,
+    @Inject('CACHE_ETH') private cache: AsyncRedis,
+    @InjectRepository(ApiCallResults) private apiCallResultsRepo: Repository<ApiCallResults>,
   ) {
     this.skipCache = process.env.NODE_ENV == 'development';
   }
@@ -46,8 +45,8 @@ export class VisionCache {
         return JSON.parse(cached, this.reviver);
       }
 
-      // const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
-      // if (dbCached) return dbCached.value;
+      const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
+      if (dbCached) return dbCached.value;
 
       // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
       const entity = await onCacheMiss();
@@ -83,19 +82,19 @@ export class VisionCache {
 
   private async maybeCacheResult(ttl: number, chainId: string, key: string, entity) {
     if (ttl == VisionCache.PERM_CACHE_DURATION) {
-      // await this.saveResultToDb(context, key, entity);
+      await this.saveResultToDb(chainId, key, entity);
     } else if (ttl > 0) {
       await this.cache.set(key, JSON.stringify(entity, this.replacer), 'EX', ttl);
     }
   }
 
-  // private async saveResultToDb(context: RequestContext, key: string, entity: object) {
-  //   const callResultsRepo = new ApiCallResults();
-  //   callResultsRepo.chainId = context.getNetwork();
-  //   callResultsRepo.key = key;
-  //   callResultsRepo.value = entity;
-  //   await this.apiCallResultsRepo.upsert(callResultsRepo, ['key']);
-  // }
+  private async saveResultToDb(chainId: string, key: string, entity: object) {
+    const callResultsRepo = new ApiCallResults();
+    callResultsRepo.chainId = Number(chainId);
+    callResultsRepo.key = key;
+    callResultsRepo.value = entity;
+    await this.apiCallResultsRepo.upsert(callResultsRepo, ['key']);
+  }
 
   getRestClient(): AsyncRedis {
     return this.cache;

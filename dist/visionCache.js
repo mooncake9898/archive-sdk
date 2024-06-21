@@ -23,15 +23,15 @@ exports.VisionCache = void 0;
 /**
  * Class that's responsible for getting cached info if exists.
  */
-// import { ApiCallResults } from './apiCallResults.entity';
+const apiCallResults_entity_1 = require("./apiCallResults.entity");
 // import { AvailableNetwork } from './config/availableNetwork';
 // import { RequestContext } from './requestContext';
 const common_1 = require("@nestjs/common");
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
+const typeorm_1 = require("@nestjs/typeorm");
 let VisionCache = VisionCache_1 = class VisionCache {
-    constructor(cache) {
+    constructor(cache, apiCallResultsRepo) {
         this.cache = cache;
+        this.apiCallResultsRepo = apiCallResultsRepo;
         this.skipCache = process.env.NODE_ENV == 'development';
     }
     /**
@@ -53,8 +53,9 @@ let VisionCache = VisionCache_1 = class VisionCache {
                 if (cached) {
                     return JSON.parse(cached, this.reviver);
                 }
-                // const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
-                // if (dbCached) return dbCached.value;
+                const dbCached = yield this.apiCallResultsRepo.findOneBy({ key });
+                if (dbCached)
+                    return dbCached.value;
                 // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
                 const entity = yield onCacheMiss();
                 if (entity === 0) {
@@ -84,20 +85,22 @@ let VisionCache = VisionCache_1 = class VisionCache {
     maybeCacheResult(ttl, chainId, key, entity) {
         return __awaiter(this, void 0, void 0, function* () {
             if (ttl == VisionCache_1.PERM_CACHE_DURATION) {
-                // await this.saveResultToDb(context, key, entity);
+                yield this.saveResultToDb(chainId, key, entity);
             }
             else if (ttl > 0) {
                 yield this.cache.set(key, JSON.stringify(entity, this.replacer), 'EX', ttl);
             }
         });
     }
-    // private async saveResultToDb(context: RequestContext, key: string, entity: object) {
-    //   const callResultsRepo = new ApiCallResults();
-    //   callResultsRepo.chainId = context.getNetwork();
-    //   callResultsRepo.key = key;
-    //   callResultsRepo.value = entity;
-    //   await this.apiCallResultsRepo.upsert(callResultsRepo, ['key']);
-    // }
+    saveResultToDb(chainId, key, entity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const callResultsRepo = new apiCallResults_entity_1.ApiCallResults();
+            callResultsRepo.chainId = Number(chainId);
+            callResultsRepo.key = key;
+            callResultsRepo.value = entity;
+            yield this.apiCallResultsRepo.upsert(callResultsRepo, ['key']);
+        });
+    }
     getRestClient() {
         return this.cache;
     }
@@ -135,6 +138,7 @@ VisionCache.MEDIUM_CACHE_DURATION = 60 * 30;
 VisionCache.PERM_CACHE_DURATION = 60 * 60 * 24 * 999;
 exports.VisionCache = VisionCache = VisionCache_1 = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)('CACHE_ETH'))
+    __param(0, (0, common_1.Inject)('CACHE_ETH')),
+    __param(1, (0, typeorm_1.InjectRepository)(apiCallResults_entity_1.ApiCallResults))
 ], VisionCache);
 //# sourceMappingURL=visionCache.js.map
