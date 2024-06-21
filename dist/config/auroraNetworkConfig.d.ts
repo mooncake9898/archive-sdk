@@ -1,0 +1,33 @@
+import { AvailableNetwork } from './availableNetwork';
+import { NetworkConfig } from './networkConfig';
+export declare class AuroraNetworkConfig implements NetworkConfig {
+    getStablecoinTokenSym(): string;
+    getNFTManagerContractAddress(): string;
+    getCurveUserGraphUrl(): string;
+    getCurveRegistryAddress(): string;
+    getRandomBackupProviderUrl(): string;
+    getV3SubgraphUrl(): string;
+    getCoingeckoPlatformName(): string;
+    getNFTManagerContractAddressts(): string;
+    getStablecoinTokenAddrs(): string;
+    getVisionETHPairAddresses(): string[];
+    getVisionETHPoolAddress(): string;
+    getMinPoolUsdValue(): number;
+    getUserLPTransactionsUrls(): string[];
+    getUniV3UserLPTxnUrl(): string;
+    getPastLogBlockSize(): number;
+    getAlchemyUrl(): string;
+    getBaseTokenForNetwork(): string;
+    getInitStartBlock(): number;
+    getNetwork(): AvailableNetwork;
+    getBasePoolProviderKey(): string;
+    getProtocolKeys(): string[];
+    getNetworkName(): string;
+    getBlocksInOneDay(): number;
+    getBlocksInTenMins(): number;
+    isContractNameLookupEnabled(): boolean;
+    getExplorerUrl(): string;
+    getAbiApiUrl(contractAddress: string): string;
+    isArchivalRPC(): boolean;
+    getETHTokenAddrs(): string;
+}

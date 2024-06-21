@@ -20,12 +20,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var VisionCache_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VisionCache = void 0;
-/**
- * Class that's responsible for getting cached info if exists.
- */
-// import { ApiCallResults } from './apiCallResults.entity';
-// import { AvailableNetwork } from './config/availableNetwork';
-// import { RequestContext } from './requestContext';
 const common_1 = require("@nestjs/common");
 // import { InjectRepository } from '@nestjs/typeorm';
 // import { Repository } from 'typeorm';
@@ -41,8 +35,7 @@ let VisionCache = VisionCache_1 = class VisionCache {
      * @param ttl
      * @param onCacheMiss
      */
-    // async cacheOrPerform(context: RequestContext, cacheKey: string, ttl: number, onCacheMiss: any)
-    cacheOrPerform(cacheKey, ttl, onCacheMiss) {
+    cacheOrPerform(context, cacheKey, ttl, onCacheMiss) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.skipCache) {
                 // we want to skip any cache on development so we don't run into caching issues

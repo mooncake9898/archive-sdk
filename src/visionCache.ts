@@ -4,6 +4,7 @@
 // import { ApiCallResults } from './apiCallResults.entity';
 // import { AvailableNetwork } from './config/availableNetwork';
 // import { RequestContext } from './requestContext';
+import { RequestContext } from './requestContext';
 import { Inject, Injectable } from '@nestjs/common';
 import AsyncRedis from 'async-redis';
 
@@ -32,8 +33,7 @@ export class VisionCache {
    * @param ttl
    * @param onCacheMiss
    */
-  // async cacheOrPerform(context: RequestContext, cacheKey: string, ttl: number, onCacheMiss: any)
-  async cacheOrPerform(cacheKey: string, ttl: number, onCacheMiss: any) {
+  async cacheOrPerform(context: RequestContext, cacheKey: string, ttl: number, onCacheMiss: any) {
     if (this.skipCache) {
       // we want to skip any cache on development so we don't run into caching issues
       return await onCacheMiss();
