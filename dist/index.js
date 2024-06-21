@@ -19,4 +19,5 @@ __exportStar(require("./axios"), exports);
 __exportStar(require("./web3-wrapper"), exports);
 __exportStar(require("./constants"), exports);
 __exportStar(require("./blueprint"), exports);
+__exportStar(require("./visionCache"), exports);
 //# sourceMappingURL=index.js.map
