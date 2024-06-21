@@ -2,8 +2,6 @@
  * Class that's responsible for getting cached info if exists.
  */
 import { ApiCallResults } from './apiCallResults.entity';
-// import { AvailableNetwork } from './config/availableNetwork';
-// import { RequestContext } from './requestContext';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import AsyncRedis from 'async-redis';
@@ -11,9 +9,11 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class VisionCache {
-  public static readonly SHORT_CACHE_DURATION = 60 * 3;
-  public static readonly MEDIUM_CACHE_DURATION = 60 * 30;
-  public static readonly PERM_CACHE_DURATION = 60 * 60 * 24 * 999;
+  public static readonly SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 3 : 10;
+  public static readonly MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
+  public static readonly SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
+  public static readonly LONG_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 48 : 10;
+  public static readonly PERM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 999 : 10;
 
   private skipCache: boolean;
 
