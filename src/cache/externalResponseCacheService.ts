@@ -8,7 +8,7 @@ import AsyncRedis from 'async-redis';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class VisionCache {
+export class ExternalResponseCacheService {
   public static readonly SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 3 : 10;
   public static readonly MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
   public static readonly SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
@@ -81,7 +81,7 @@ export class VisionCache {
   }
 
   private async maybeCacheResult(ttl: number, chainId: string, key: string, entity) {
-    if (ttl == VisionCache.PERM_CACHE_DURATION) {
+    if (ttl == ExternalResponseCacheService.PERM_CACHE_DURATION) {
       await this.saveResultToDb(chainId, key, entity);
     } else if (ttl > 0) {
       await this.cache.set(key, JSON.stringify(entity, this.replacer), 'EX', ttl);
