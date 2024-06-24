@@ -34,6 +34,7 @@ const apiCallResults_entity_1 = require("./apiCallResults.entity");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const async_redis_1 = __importDefault(require("async-redis"));
+const ethers_1 = require("ethers");
 const typeorm_2 = require("typeorm");
 let ExternalResponseCacheService = ExternalResponseCacheService_1 = class ExternalResponseCacheService {
     constructor(cache, apiCallResultsRepo) {
@@ -125,6 +126,9 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                 dataType: 'Map',
                 value: Array.from(value.entries()), // or with spread: value: [...value]
             };
+        }
+        else if (this[key] instanceof ethers_1.ethers.BigNumber) {
+            return { dataType: 'ethers.BigNumber', value: this[key].toString() };
         }
         else {
             return value;

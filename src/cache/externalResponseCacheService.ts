@@ -5,6 +5,7 @@ import { ApiCallResults } from './apiCallResults.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import AsyncRedis from 'async-redis';
+import { ethers } from 'ethers';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -118,6 +119,8 @@ export class ExternalResponseCacheService {
         dataType: 'Map',
         value: Array.from(value.entries()), // or with spread: value: [...value]
       };
+    } else if (this[key] instanceof ethers.BigNumber) {
+      return { dataType: 'ethers.BigNumber', value: this[key].toString() };
     } else {
       return value;
     }
