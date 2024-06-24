@@ -75,7 +75,7 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                     return null;
                 }
                 if (Array.isArray(entity) && entity.length == 0) {
-                    return null;
+                    return [];
                 }
                 if (entity instanceof Map && entity.size == 0) {
                     return null;

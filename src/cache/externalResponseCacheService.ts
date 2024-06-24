@@ -66,7 +66,7 @@ export class ExternalResponseCacheService {
       }
 
       if (Array.isArray(entity) && entity.length == 0) {
-        return null;
+        return [];
       }
 
       if (entity instanceof Map && entity.size == 0) {
