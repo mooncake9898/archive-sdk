@@ -9,7 +9,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ExternalResponseCacheService {
+  public static readonly SUPER_SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 : 10;
   public static readonly SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 3 : 10;
+  public static readonly TEN_MIN_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 10 : 10;
   public static readonly MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
   public static readonly SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
   public static readonly LONG_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 48 : 10;

@@ -7,7 +7,9 @@ import { Repository } from 'typeorm';
 export declare class ExternalResponseCacheService {
     private cache;
     private apiCallResultsRepo;
+    static readonly SUPER_SHORT_CACHE_DURATION: number;
     static readonly SHORT_CACHE_DURATION: number;
+    static readonly TEN_MIN_CACHE_DURATION: number;
     static readonly MEDIUM_CACHE_DURATION: number;
     static readonly SIX_HOUR_DURATION: number;
     static readonly LONG_CACHE_DURATION: number;

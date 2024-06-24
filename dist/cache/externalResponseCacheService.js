@@ -140,7 +140,9 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
     }
 };
 exports.ExternalResponseCacheService = ExternalResponseCacheService;
+ExternalResponseCacheService.SUPER_SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 : 10;
 ExternalResponseCacheService.SHORT_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 3 : 10;
+ExternalResponseCacheService.TEN_MIN_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 10 : 10;
 ExternalResponseCacheService.MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
 ExternalResponseCacheService.SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
 ExternalResponseCacheService.LONG_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 48 : 10;
