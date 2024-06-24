@@ -139,6 +139,9 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
             if (value.dataType === 'Map') {
                 return new Map(value.value);
             }
+            else if (value.dataType === 'ethers.BigNumber') {
+                return ethers_1.ethers.BigNumber.from(value.value);
+            }
         }
         return value;
     }

@@ -126,10 +126,18 @@ export class ExternalResponseCacheService {
     }
   }
 
-  private reviver(key, value) {
+  private reviver(
+    key: any,
+    value: {
+      dataType: string;
+      value: Iterable<readonly [unknown, unknown]>;
+    },
+  ) {
     if (typeof value === 'object' && value !== null) {
       if (value.dataType === 'Map') {
         return new Map(value.value);
+      } else if (value.dataType === 'ethers.BigNumber') {
+        return ethers.BigNumber.from(value.value);
       }
     }
     return value;
