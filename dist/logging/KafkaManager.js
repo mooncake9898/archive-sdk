@@ -149,6 +149,8 @@ class KafkaManager {
             if (!this.isConnected) {
                 yield this.connect();
             }
+            if (!this.isConnected)
+                return;
             yield this.producer.send({
                 topic,
                 messages,
