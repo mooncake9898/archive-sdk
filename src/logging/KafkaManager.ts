@@ -172,6 +172,7 @@ export class KafkaManager {
     if (!this.isConnected) {
       await this.connect();
     }
+    if (!this.isConnected) return;
     await this.producer.send({
       topic,
       messages,
