@@ -23,5 +23,6 @@ var CHAINID;
     CHAINID["RONIN"] = "2020";
     CHAINID["BEACON"] = "eth2";
     CHAINID["BASE"] = "8453";
+    CHAINID["AVAX_PCHAIN"] = "-9797";
 })(CHAINID || (exports.CHAINID = CHAINID = {}));
 //# sourceMappingURL=constants.js.map

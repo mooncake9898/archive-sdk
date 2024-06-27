@@ -18,5 +18,6 @@ export declare enum CHAINID {
     COSMOSHUB = "-1061702",
     RONIN = "2020",
     BEACON = "eth2",
-    BASE = "8453"
+    BASE = "8453",
+    AVAX_PCHAIN = "-9797"
 }
