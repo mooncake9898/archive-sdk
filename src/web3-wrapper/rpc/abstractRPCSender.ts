@@ -8,6 +8,6 @@ export class AbstractRPCSender {
   }
 
   protected shouldRetry(error: any): boolean {
-    return ['NETWORK_ERROR', 'SERVER_ERROR'].includes(error.code) || [403, 429].includes(error.code);
+    return ['NETWORK_ERROR', 'SERVER_ERROR'].includes(error.code) || [403, 429].includes(error.status);
   }
 }
