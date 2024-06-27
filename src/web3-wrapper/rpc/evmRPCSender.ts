@@ -67,7 +67,7 @@ export class EvmRPCSender extends AbstractRPCSender {
           error.message,
           this.requestId,
         );
-        if (!this.shouldRetryError(error)) break;
+        if (!this.shouldRetry(error)) break;
       }
     }
 
