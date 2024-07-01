@@ -12,7 +12,8 @@ class RPCOracle {
         this.rpcInfos = rpcInfos;
     }
     getRpcCount() {
-        return this.rpcInfos.length;
+        var _a;
+        return ((_a = this.rpcInfos) === null || _a === void 0 ? void 0 : _a.length) || 0;
     }
     getNextAvailableRpc() {
         let totalWeight = 0;
