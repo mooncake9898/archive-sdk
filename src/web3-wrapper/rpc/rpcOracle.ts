@@ -16,10 +16,10 @@ export class RPCOracle {
   }
 
   getRpcCount(): number {
-    return this.rpcInfos.length;
+    return this.rpcInfos?.length || 0;
   }
 
-  getNextAvailableRpc() {
+  getNextAvailableRpc(): string {
     let totalWeight = 0;
     for (const rpc of this.rpcInfos) {
       totalWeight += rpc.weight;

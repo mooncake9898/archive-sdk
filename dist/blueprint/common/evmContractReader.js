@@ -13,12 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EvmContractReader = void 0;
+const web3_wrapper_1 = require("../..//web3-wrapper");
 const utils_1 = require("./utils");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 const ethers_1 = require("ethers");
-const web3_wrapper_1 = require("../..//web3-wrapper");
 // Please set your favorable and reliable RPC URLs
-const rpcs = [{ url: 'https://polygon-rpc.com', weight: 1 }, { url: 'https://rpc.ankr.com/polygon', weight: 1 }];
+const rpcs = [
+    { url: 'https://polygon-rpc.com', weight: 1 },
+    { url: 'https://rpc.ankr.com/polygon', weight: 1 },
+];
 class EvmContractReader {
     constructor(context) {
         this.context = context;
