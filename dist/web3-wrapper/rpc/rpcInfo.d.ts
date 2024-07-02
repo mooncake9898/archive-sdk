@@ -3,4 +3,7 @@ export declare class RpcInfo {
   weight: number;
   chainId?: string;
   isArchiveNode?: boolean;
+  requiresProxy?: boolean;
+  note?: string;
+  isDisabled?: string;
 }
