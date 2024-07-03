@@ -19,5 +19,4 @@ __exportStar(require("./archiveLogger"), exports);
 __exportStar(require("./blockbydateAPI"), exports);
 __exportStar(require("./requestUtils"), exports);
 __exportStar(require("./utils"), exports);
-__exportStar(require("./evmContractReader"), exports);
 //# sourceMappingURL=index.js.map
