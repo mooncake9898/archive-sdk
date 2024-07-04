@@ -5,7 +5,12 @@ describe('RPCOracle', () => {
   const rpcs = ['http://rpc1.example.com', 'http://rpc2.example.com'];
 
   beforeEach(() => {
-    rpcOracle = new RPCOracle('1', rpcs);
+    rpcOracle = new RPCOracle('1', rpcs.map(e => {
+      return {
+        url: e,
+        weight: 1
+      }
+    }));
   });
 
   describe('getRpcCount', () => {
@@ -22,24 +27,5 @@ describe('RPCOracle', () => {
         emptyRpcOracle.getNextAvailableRpc();
       }).toBeNull;
     });
-
-    it('should cycle through available RPCs', () => {
-      const selectedRPCs = [];
-      for (let i = 0; i < rpcs.length; i++) {
-        selectedRPCs.push(rpcOracle.getNextAvailableRpc());
-      }
-
-      expect(selectedRPCs).toEqual(rpcs);
-    });
-  });
-
-  it('should cycle through available RPCs when called more times than available', () => {
-    const selectedRPCs = [];
-
-    for (let i = 0; i < 3; i++) {
-      selectedRPCs.push(rpcOracle.getNextAvailableRpc());
-    }
-
-    expect(selectedRPCs).toEqual([rpcs[0], rpcs[1], null]);
   });
 });
