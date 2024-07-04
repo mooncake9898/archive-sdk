@@ -3,7 +3,15 @@ import { executeCallOrSend } from '../../src/web3-wrapper';
 
 describe('utils functions', () => {
   const testRequestId = '03a0bfdc-9bcf-4436-a200-c85e11b3926c';
-  const rpcs = ['http://rpc1.example.com', 'http://rpc2.example.com'];
+  const rpcs = [{
+    url: 'http://rpc1.example.com',
+    weight: 1
+  },
+  {
+    url: 'http://rpc2.example.com',
+    weight: 1
+  }
+  ];
 
   describe('calling executeCallOrSend', () => {
     it('should return a valid result', async () => {
