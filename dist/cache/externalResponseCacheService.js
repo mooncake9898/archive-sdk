@@ -153,7 +153,7 @@ ExternalResponseCacheService.TEN_MIN_CACHE_DURATION = process.env.NODE_ENV == 'p
 ExternalResponseCacheService.MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
 ExternalResponseCacheService.SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
 ExternalResponseCacheService.LONG_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 48 : 10;
-ExternalResponseCacheService.PERM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 999 : 10;
+ExternalResponseCacheService.PERM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 999 : 20;
 exports.ExternalResponseCacheService = ExternalResponseCacheService = ExternalResponseCacheService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)('CACHE_ETH')),
