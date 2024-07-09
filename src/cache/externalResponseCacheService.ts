@@ -16,7 +16,7 @@ export class ExternalResponseCacheService {
   public static readonly MEDIUM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 30 : 10;
   public static readonly SIX_HOUR_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 6 : 10;
   public static readonly LONG_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 48 : 10;
-  public static readonly PERM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 999 : 10;
+  public static readonly PERM_CACHE_DURATION = process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 999 : 20;
 
   private skipCache: boolean;
 
