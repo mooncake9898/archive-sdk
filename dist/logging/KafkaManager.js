@@ -21,6 +21,11 @@ class KafkaManager {
         this.stringifyQueues = (array) => array.map((r) => {
             return { value: JSON.stringify(r) };
         });
+        if (!kafkaConfig &&
+            (!process.env.KAFKA_BROKER_URL || !process.env.KAFKA_PRODUCER_USERNAME || !process.env.KAFKA_PRODUCER_PASSWORD)) {
+            console.error('Kafka environment variable is not set');
+            return;
+        }
         const kafkaClient = new kafkajs_1.Kafka(kafkaConfig !== null && kafkaConfig !== void 0 ? kafkaConfig : kafkaConfig_1.defaultKafkaConfig);
         this._producer = kafkaClient.producer();
         this._consumer = kafkaClient.consumer({ groupId: this.consumerTestGroupID });
