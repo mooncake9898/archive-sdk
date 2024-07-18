@@ -16,6 +16,14 @@ export class KafkaManager {
   private consumerTestGroupID = 'test-kafka-manager';
 
   private constructor(kafkaConfig?: KafkaConfig) {
+    if (
+      !kafkaConfig &&
+      (!process.env.KAFKA_BROKER_URL || !process.env.KAFKA_PRODUCER_USERNAME || !process.env.KAFKA_PRODUCER_PASSWORD)
+    ) {
+      console.error('Kafka environment variable is not set');
+      return;
+    }
+
     const kafkaClient = new Kafka(kafkaConfig ?? defaultKafkaConfig);
 
     this._producer = kafkaClient.producer();
