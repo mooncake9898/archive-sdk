@@ -34,6 +34,7 @@ const apiCallResults_entity_1 = require("./apiCallResults.entity");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const async_redis_1 = __importDefault(require("async-redis"));
+const bignumber_js_1 = __importDefault(require("bignumber.js"));
 const ethers_1 = require("ethers");
 const typeorm_2 = require("typeorm");
 let ExternalResponseCacheService = ExternalResponseCacheService_1 = class ExternalResponseCacheService {
@@ -62,8 +63,12 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                     return JSON.parse(cached, this.reviver);
                 }
                 const dbCached = yield this.apiCallResultsRepo.findOneBy({ key });
-                if (dbCached)
+                if (dbCached) {
+                    if (dbCached.value['type'] === 'BigNumber')
+                        return (0, bignumber_js_1.default)(dbCached.value['hex']);
                     return dbCached.value;
+                }
+                ;
                 // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
                 const entity = yield onCacheMiss();
                 if (entity === 0) {
