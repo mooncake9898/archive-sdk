@@ -5,6 +5,7 @@ import { ApiCallResults } from './apiCallResults.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import AsyncRedis from 'async-redis';
+import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 import { Repository } from 'typeorm';
 
@@ -49,7 +50,11 @@ export class ExternalResponseCacheService {
       }
 
       const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
-      if (dbCached) return dbCached.value;
+
+      if (dbCached) {
+        if (dbCached.value['type'] === 'BigNumber') return BigNumber(dbCached.value['hex']);
+        return dbCached.value;
+      }
 
       // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
       const entity = await onCacheMiss();
