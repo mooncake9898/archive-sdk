@@ -4,12 +4,12 @@ exports.defaultKafkaConfig = void 0;
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 exports.defaultKafkaConfig = {
-    requestTimeout: 2000,
+    requestTimeout: 20000,
     retry: {
         initialRetryTime: 1000,
         retries: 1,
         maxRetryTime: 3000,
-        restartOnFailure: (_e) => Promise.resolve(false),
+        restartOnFailure: () => Promise.resolve(false),
     },
     brokers: [process.env.KAFKA_BROKER_URL],
     sasl: {
@@ -19,6 +19,6 @@ exports.defaultKafkaConfig = {
     },
     ssl: false,
     authenticationTimeout: 15000,
-    connectionTimeout: 5000,
+    connectionTimeout: 30000,
 };
 //# sourceMappingURL=kafkaConfig.js.map

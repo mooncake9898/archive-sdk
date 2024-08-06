@@ -68,7 +68,6 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                         return (0, bignumber_js_1.default)(dbCached.value['hex']);
                     return dbCached.value;
                 }
-                ;
                 // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
                 const entity = yield onCacheMiss();
                 if (entity === 0) {
