@@ -16,5 +16,5 @@ export declare class EvmRPCSender extends AbstractRPCSender {
     executeCallOrSend(): Promise<any>;
     private isOptimismOrBaseNetwork;
     private getProviderForCall;
-    private getProxyCallProvider;
+    private getProxyRPCProvider;
 }

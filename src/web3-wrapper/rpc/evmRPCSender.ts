@@ -87,7 +87,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     }
 
     if (selectedRpc.requiresProxy) {
-      return this.getProxyCallProvider(selectedRpc.url);
+      return this.getProxyRPCProvider(selectedRpc.url);
     }
 
     return new JsonRpcProvider(selectedRpc.url, this.networkId, {
@@ -95,7 +95,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     });
   }
 
-  private getProxyCallProvider(rpcUrl: string): JsonRpcProvider {
+  private getProxyRPCProvider(rpcUrl: string): JsonRpcProvider {
     const fetchReq = new FetchRequest(rpcUrl);
     const staticNetwork = new Network(this.networkName, BigInt(this.networkId));
     fetchReq.getUrlFunc = FetchRequest.createGetUrlFunc({ agent: new HttpsProxyAgent(this.proxyServerUrl) });

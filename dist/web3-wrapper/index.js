@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RpcInfo = exports.Configuration = exports.RpcConfig = exports.SolanaRPCSender = exports.EvmRPCSender = exports.executeCallOrSendSolana = void 0;
-var utils_1 = require("./utils");
-Object.defineProperty(exports, "executeCallOrSendSolana", { enumerable: true, get: function () { return utils_1.executeCallOrSendSolana; } });
+exports.RpcInfo = exports.Configuration = exports.RpcConfig = exports.SolanaRPCSender = exports.EvmRPCSender = void 0;
 var evmRPCSender_1 = require("./rpc/evmRPCSender");
 Object.defineProperty(exports, "EvmRPCSender", { enumerable: true, get: function () { return evmRPCSender_1.EvmRPCSender; } });
 var solanaRPCSender_1 = require("./rpc/solanaRPCSender");

@@ -76,13 +76,13 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
             }));
         }
         if (selectedRpc.requiresProxy) {
-            return this.getProxyCallProvider(selectedRpc.url);
+            return this.getProxyRPCProvider(selectedRpc.url);
         }
         return new ethers_v6_1.JsonRpcProvider(selectedRpc.url, this.networkId, {
             staticNetwork: new ethers_v6_1.Network(this.networkName, BigInt(this.networkId)),
         });
     }
-    getProxyCallProvider(rpcUrl) {
+    getProxyRPCProvider(rpcUrl) {
         const fetchReq = new ethers_v6_1.FetchRequest(rpcUrl);
         const staticNetwork = new ethers_v6_1.Network(this.networkName, BigInt(this.networkId));
         fetchReq.getUrlFunc = ethers_v6_1.FetchRequest.createGetUrlFunc({ agent: new https_proxy_agent_1.HttpsProxyAgent(this.proxyServerUrl) });
