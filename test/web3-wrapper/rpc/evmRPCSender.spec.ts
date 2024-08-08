@@ -32,9 +32,9 @@ describe('EvmRPCSender', () => {
       expect(result).not.toBeNull();
     });
 
-    it('should throw an error when calling with an unknown chain id', async () => {
-      try {
-        const sender = new EvmRPCSender(
+    it('should throw an error when calling with an unknown chain id', () => {
+      expect(() => {
+        new EvmRPCSender(
           rpcs,
           500,
           'unknown',
@@ -44,9 +44,7 @@ describe('EvmRPCSender', () => {
           mockProxyUrl,
           testRequestId,
         );
-      } catch (err) {
-        expect(err.message).toBe('Chain with ID 500 not found.');
-      }
+      }).toThrow('Chain with ID 500 not found.');
     });
   });
 });
