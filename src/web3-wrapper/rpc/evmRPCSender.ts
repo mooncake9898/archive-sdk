@@ -90,7 +90,7 @@ export class EvmRPCSender extends AbstractRPCSender {
       return this.getProxyRPCProvider(selectedRpc.url);
     }
 
-    return new JsonRpcProvider(selectedRpc.url, this.networkId, {
+    return new JsonRpcProvider(selectedRpc.url, Number(this.networkId), {
       staticNetwork: new Network(this.networkName, BigInt(this.networkId)),
     });
   }
@@ -99,6 +99,6 @@ export class EvmRPCSender extends AbstractRPCSender {
     const fetchReq = new FetchRequest(rpcUrl);
     const staticNetwork = new Network(this.networkName, BigInt(this.networkId));
     fetchReq.getUrlFunc = FetchRequest.createGetUrlFunc({ agent: new HttpsProxyAgent(this.proxyServerUrl) });
-    return new JsonRpcProvider(fetchReq, this.networkId, { staticNetwork });
+    return new JsonRpcProvider(fetchReq, Number(this.networkId), { staticNetwork });
   }
 }

@@ -78,7 +78,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (selectedRpc.requiresProxy) {
             return this.getProxyRPCProvider(selectedRpc.url);
         }
-        return new ethers_v6_1.JsonRpcProvider(selectedRpc.url, this.networkId, {
+        return new ethers_v6_1.JsonRpcProvider(selectedRpc.url, Number(this.networkId), {
             staticNetwork: new ethers_v6_1.Network(this.networkName, BigInt(this.networkId)),
         });
     }
@@ -86,7 +86,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         const fetchReq = new ethers_v6_1.FetchRequest(rpcUrl);
         const staticNetwork = new ethers_v6_1.Network(this.networkName, BigInt(this.networkId));
         fetchReq.getUrlFunc = ethers_v6_1.FetchRequest.createGetUrlFunc({ agent: new https_proxy_agent_1.HttpsProxyAgent(this.proxyServerUrl) });
-        return new ethers_v6_1.JsonRpcProvider(fetchReq, this.networkId, { staticNetwork });
+        return new ethers_v6_1.JsonRpcProvider(fetchReq, Number(this.networkId), { staticNetwork });
     }
 }
 exports.EvmRPCSender = EvmRPCSender;
