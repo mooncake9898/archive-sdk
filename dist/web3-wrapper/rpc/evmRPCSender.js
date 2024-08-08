@@ -78,8 +78,9 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (selectedRpc.requiresProxy) {
             return this.getProxyRPCProvider(selectedRpc.url);
         }
-        return new ethers_v6_1.JsonRpcProvider(selectedRpc.url, Number(this.networkId), {
-            staticNetwork: new ethers_v6_1.Network(this.networkName, BigInt(this.networkId)),
+        return new ethers_1.ethers.providers.StaticJsonRpcProvider({
+            url: selectedRpc.url,
+            timeout: this.timeoutMilliseconds,
         });
     }
     getProxyRPCProvider(rpcUrl) {

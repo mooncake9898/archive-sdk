@@ -90,8 +90,9 @@ export class EvmRPCSender extends AbstractRPCSender {
       return this.getProxyRPCProvider(selectedRpc.url);
     }
 
-    return new JsonRpcProvider(selectedRpc.url, Number(this.networkId), {
-      staticNetwork: new Network(this.networkName, BigInt(this.networkId)),
+    return new ethers.providers.StaticJsonRpcProvider({
+      url: selectedRpc.url,
+      timeout: this.timeoutMilliseconds,
     });
   }
 
