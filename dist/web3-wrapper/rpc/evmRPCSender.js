@@ -17,12 +17,16 @@ const abstractRPCSender_1 = require("./abstractRPCSender");
 const rpcOracle_1 = require("./rpcOracle");
 const sdk_1 = require("@eth-optimism/sdk");
 const ethers_1 = require("ethers");
+const ethers_v6_1 = require("ethers-v6");
+const https_proxy_agent_1 = require("https-proxy-agent");
 const perf_hooks_1 = require("perf_hooks");
 class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
-    constructor(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback = true) {
+    constructor(rpcInfos, networkId, networkName, rpcProviderFn, proxyServerUrl, requestId, attemptFallback = true) {
         super();
         this.networkId = networkId;
+        this.networkName = networkName;
         this.rpcProviderFn = rpcProviderFn;
+        this.proxyServerUrl = proxyServerUrl;
         this.requestId = requestId;
         this.attemptFallback = attemptFallback;
         this.timeoutMilliseconds = 10000;
@@ -32,34 +36,26 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
     }
-    executeWithFallbacks() {
+    executeCallOrSend() {
         return __awaiter(this, void 0, void 0, function* () {
             for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-                const selectedRpcUrl = this.rpcOracle.getNextAvailableRpc();
-                if (!selectedRpcUrl) {
+                const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+                if (!selectedRpc) {
                     continue;
                 }
                 const kafkaManager = logging_1.KafkaManager.getInstance();
                 try {
                     const start = perf_hooks_1.performance.now();
-                    const result = yield this.rpcProviderFn(this.isOptimismOrBaseNetwork(String(this.networkId))
-                        ? (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
-                            url: selectedRpcUrl,
-                            timeout: this.timeoutMilliseconds,
-                        }))
-                        : new ethers_1.ethers.providers.StaticJsonRpcProvider({
-                            url: selectedRpcUrl,
-                            timeout: this.timeoutMilliseconds,
-                        }));
+                    const result = yield this.rpcProviderFn(this.getProviderForCall(selectedRpc));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
                     return result;
                 }
                 catch (error) {
-                    const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+                    const errorMessage = this.getErrorMessage(error, selectedRpc.url);
                     this.logger.error(errorMessage);
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpcUrl, String(this.networkId), this.rpcProviderFn, error.message, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), this.rpcProviderFn, error.message, this.requestId);
                     if (!this.shouldRetry(error))
                         break;
                 }
@@ -71,6 +67,26 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
     }
     isOptimismOrBaseNetwork(networkId) {
         return networkId === constants_1.CHAINID.OPTIMISM || networkId === constants_1.CHAINID.BASE;
+    }
+    getProviderForCall(selectedRpc) {
+        if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
+            return (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
+                url: selectedRpc.url,
+                timeout: this.timeoutMilliseconds,
+            }));
+        }
+        if (selectedRpc.requiresProxy) {
+            return this.getProxyCallProvider(selectedRpc.url);
+        }
+        return new ethers_v6_1.JsonRpcProvider(selectedRpc.url, this.networkId, {
+            staticNetwork: new ethers_v6_1.Network(this.networkName, BigInt(this.networkId)),
+        });
+    }
+    getProxyCallProvider(rpcUrl) {
+        const fetchReq = new ethers_v6_1.FetchRequest(rpcUrl);
+        const staticNetwork = new ethers_v6_1.Network(this.networkName, BigInt(this.networkId));
+        fetchReq.getUrlFunc = ethers_v6_1.FetchRequest.createGetUrlFunc({ agent: new https_proxy_agent_1.HttpsProxyAgent(this.proxyServerUrl) });
+        return new ethers_v6_1.JsonRpcProvider(fetchReq, this.networkId, { staticNetwork });
     }
 }
 exports.EvmRPCSender = EvmRPCSender;

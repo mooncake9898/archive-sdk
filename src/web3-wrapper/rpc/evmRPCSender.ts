@@ -2,10 +2,13 @@ import { CHAINID } from '../../constants';
 import { KafkaManager } from '../../logging';
 import { RpcInfo } from '../../web3-wrapper/rpc/rpcInfo';
 import { ArchiveLogger, REQUEST_ID } from '../logger';
+import { ArchiveJsonRpcProvider } from '../networkConfigurations';
 import { AbstractRPCSender } from './abstractRPCSender';
 import { RPCOracle } from './rpcOracle';
 import { asL2Provider } from '@eth-optimism/sdk';
 import { ethers } from 'ethers';
+import { FetchRequest, JsonRpcProvider, Network } from 'ethers-v6';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Logger } from 'log4js';
 import { performance } from 'perf_hooks';
 
@@ -18,7 +21,9 @@ export class EvmRPCSender extends AbstractRPCSender {
   constructor(
     rpcInfos: RpcInfo[],
     private networkId: number | string,
-    private rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>,
+    private networkName: string,
+    private rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
+    private proxyServerUrl: string,
     private requestId?: string,
     private attemptFallback = true,
   ) {
@@ -31,38 +36,26 @@ export class EvmRPCSender extends AbstractRPCSender {
     if (this.requestId) this.logger.addContext(REQUEST_ID, this.requestId);
   }
 
-  public async executeWithFallbacks(): Promise<any> {
+  public async executeCallOrSend(): Promise<any> {
     for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-      const selectedRpcUrl = this.rpcOracle.getNextAvailableRpc();
-      if (!selectedRpcUrl) {
+      const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+      if (!selectedRpc) {
         continue;
       }
       const kafkaManager = KafkaManager.getInstance();
       try {
         const start = performance.now();
-        const result = await this.rpcProviderFn(
-          this.isOptimismOrBaseNetwork(String(this.networkId))
-            ? asL2Provider(
-                new ethers.providers.StaticJsonRpcProvider({
-                  url: selectedRpcUrl,
-                  timeout: this.timeoutMilliseconds,
-                }),
-              )
-            : new ethers.providers.StaticJsonRpcProvider({
-                url: selectedRpcUrl,
-                timeout: this.timeoutMilliseconds,
-              }),
-        );
+        const result = await this.rpcProviderFn(this.getProviderForCall(selectedRpc));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
 
         return result;
       } catch (error) {
-        const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+        const errorMessage = this.getErrorMessage(error, selectedRpc.url);
         this.logger.error(errorMessage);
         kafkaManager?.sendRpcFailureToKafka(
-          selectedRpcUrl,
+          selectedRpc.url,
           String(this.networkId),
           this.rpcProviderFn,
           error.message,
@@ -81,5 +74,31 @@ export class EvmRPCSender extends AbstractRPCSender {
 
   private isOptimismOrBaseNetwork(networkId: string): boolean {
     return networkId === CHAINID.OPTIMISM || networkId === CHAINID.BASE;
+  }
+
+  private getProviderForCall(selectedRpc: RpcInfo): ArchiveJsonRpcProvider {
+    if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
+      return asL2Provider(
+        new ethers.providers.StaticJsonRpcProvider({
+          url: selectedRpc.url,
+          timeout: this.timeoutMilliseconds,
+        }),
+      );
+    }
+
+    if (selectedRpc.requiresProxy) {
+      return this.getProxyCallProvider(selectedRpc.url);
+    }
+
+    return new JsonRpcProvider(selectedRpc.url, this.networkId, {
+      staticNetwork: new Network(this.networkName, BigInt(this.networkId)),
+    });
+  }
+
+  private getProxyCallProvider(rpcUrl: string): JsonRpcProvider {
+    const fetchReq = new FetchRequest(rpcUrl);
+    const staticNetwork = new Network(this.networkName, BigInt(this.networkId));
+    fetchReq.getUrlFunc = FetchRequest.createGetUrlFunc({ agent: new HttpsProxyAgent(this.proxyServerUrl) });
+    return new JsonRpcProvider(fetchReq, this.networkId, { staticNetwork });
   }
 }

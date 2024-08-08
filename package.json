@@ -67,6 +67,7 @@
     "bignumber.js": "^9.1.1",
     "dotenv": "16.3.1",
     "ethers": "5.7.2",
+    "ethers-v6": "npm:ethers@6.13.2",
     "ioredis": "^5.3.1",
     "kafkajs": "2.2.4",
     "log4js": "6.9.1",

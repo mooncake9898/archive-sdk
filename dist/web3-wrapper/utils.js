@@ -9,16 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeCallOrSendSolana = exports.executeCallOrSend = void 0;
-const evmRPCSender_1 = require("./rpc/evmRPCSender");
+exports.executeCallOrSendSolana = void 0;
 const solanaRPCSender_1 = require("./rpc/solanaRPCSender");
-function executeCallOrSend(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback = true) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const sender = new evmRPCSender_1.EvmRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
-        return sender.executeWithFallbacks();
-    });
-}
-exports.executeCallOrSend = executeCallOrSend;
 function executeCallOrSendSolana(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback = true) {
     return __awaiter(this, void 0, void 0, function* () {
         const sender = new solanaRPCSender_1.SolanaRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
@@ -26,4 +18,5 @@ function executeCallOrSendSolana(rpcInfos, networkId, rpcProviderFn, requestId, 
     });
 }
 exports.executeCallOrSendSolana = executeCallOrSendSolana;
+// TODO: https://solana.stackexchange.com/questions/445/how-to-get-solana-web3-js-to-access-the-rpc-endpoints-through-a-proxy
 //# sourceMappingURL=utils.js.map

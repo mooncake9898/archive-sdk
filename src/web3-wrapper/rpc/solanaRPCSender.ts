@@ -30,19 +30,19 @@ export class SolanaRPCSender extends AbstractRPCSender {
 
   public async executeWithFallbacks(): Promise<any> {
     for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-      const selectedRpcUrl = this.rpcOracle.getNextAvailableRpc();
-      if (!selectedRpcUrl) {
+      const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+      if (!selectedRpc) {
         continue;
       }
       try {
         const start = performance.now();
-        const result = await this.rpcProviderFn(new web3_solana.Connection(selectedRpcUrl));
+        const result = await this.rpcProviderFn(new web3_solana.Connection(selectedRpc.url));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
         return result;
       } catch (error) {
-        const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+        const errorMessage = this.getErrorMessage(error, selectedRpc.url);
         this.logger.error(errorMessage);
       }
     }

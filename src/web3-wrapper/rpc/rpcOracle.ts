@@ -19,7 +19,7 @@ export class RPCOracle {
     return this.rpcInfos?.length || 0;
   }
 
-  getNextAvailableRpc(): string {
+  getNextAvailableRpc(): RpcInfo {
     const totalWeight = this.rpcInfos.reduce((accumulator, rpc) => accumulator + rpc.weight, 0);
 
     const randomWeight = Math.random() * totalWeight;
@@ -28,7 +28,7 @@ export class RPCOracle {
     for (const rpc of this.rpcInfos) {
       weightSum += rpc.weight;
       if (randomWeight < weightSum) {
-        return rpc.url;
+        return rpc;
       }
     }
   }

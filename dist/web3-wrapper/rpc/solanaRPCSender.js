@@ -35,20 +35,20 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
     executeWithFallbacks() {
         return __awaiter(this, void 0, void 0, function* () {
             for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-                const selectedRpcUrl = this.rpcOracle.getNextAvailableRpc();
-                if (!selectedRpcUrl) {
+                const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+                if (!selectedRpc) {
                     continue;
                 }
                 try {
                     const start = perf_hooks_1.performance.now();
-                    const result = yield this.rpcProviderFn(new web3_js_1.default.Connection(selectedRpcUrl));
+                    const result = yield this.rpcProviderFn(new web3_js_1.default.Connection(selectedRpc.url));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpcUrl, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
                     return result;
                 }
                 catch (error) {
-                    const errorMessage = this.getErrorMessage(error, selectedRpcUrl);
+                    const errorMessage = this.getErrorMessage(error, selectedRpc.url);
                     this.logger.error(errorMessage);
                 }
             }
