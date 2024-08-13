@@ -1,29 +1,35 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeCallOrSendSolana = exports.executeCallOrSend = void 0;
-const evmRPCSender_1 = require("./rpc/evmRPCSender");
-const solanaRPCSender_1 = require("./rpc/solanaRPCSender");
-function executeCallOrSend(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback = true) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const sender = new evmRPCSender_1.EvmRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
-        return sender.executeWithFallbacks();
-    });
+exports.getContractFromEthers = exports.getSafeTransactionHash = void 0;
+const ethers_1 = require("ethers");
+const ethers_v6_1 = require("ethers-v6");
+/**
+ * Safely returns transaction hash from a receipt that could be from v5 or v6 of ethers.js api
+ * @param {ethers.providers.TransactionReceipt | EthersV6TxReceipt} transaction receipt
+ * @returns {string} transaction hash
+ */
+function getSafeTransactionHash(receipt) {
+    if ('transactionHash' in receipt) {
+        return receipt.transactionHash;
+    }
+    return receipt.hash;
 }
-exports.executeCallOrSend = executeCallOrSend;
-function executeCallOrSendSolana(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback = true) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const sender = new solanaRPCSender_1.SolanaRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
-        return sender.executeWithFallbacks();
-    });
+exports.getSafeTransactionHash = getSafeTransactionHash;
+/**
+ * Safely returns contract abstraction that could be from v5 or v6 of ethers.js api
+ * @param {string} address
+ * @param {ethers.ContractInterface | Interface | InterfaceAbi} abi
+ * @param {ArchiveJsonRpcProvider} provider
+ * @returns {EthersV6Contract | ethers.Contract} contract abstraction
+ */
+function getContractFromEthers(address, abi, provider) {
+    if (isEthersV6Provider(provider)) {
+        return new ethers_v6_1.Contract(address, abi, provider);
+    }
+    return new ethers_1.ethers.Contract(address, abi, provider);
 }
-exports.executeCallOrSendSolana = executeCallOrSendSolana;
+exports.getContractFromEthers = getContractFromEthers;
+function isEthersV6Provider(provider) {
+    return typeof provider.getFeeData === 'function';
+}
 //# sourceMappingURL=utils.js.map

@@ -1,27 +1,32 @@
-import { RpcInfo } from '../web3-wrapper/rpc/rpcInfo';
-import { EvmRPCSender } from './rpc/evmRPCSender';
-import { SolanaRPCSender } from './rpc/solanaRPCSender';
-import * as web3_solana from '@solana/web3.js';
+import { ArchiveJsonRpcProvider } from './networkConfigurations';
 import { ethers } from 'ethers';
+import { Contract as EthersV6Contract, TransactionReceipt as EthersV6TxReceipt, JsonRpcProvider } from 'ethers-v6';
 
-export async function executeCallOrSend(
-  rpcInfos: RpcInfo[],
-  networkId: number | string,
-  rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>,
-  requestId?: string,
-  attemptFallback = true,
-): Promise<any> {
-  const sender = new EvmRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
-  return sender.executeWithFallbacks();
+/**
+ * Safely returns transaction hash from a receipt that could be from v5 or v6 of ethers.js api
+ * @param {ethers.providers.TransactionReceipt | EthersV6TxReceipt} transaction receipt
+ * @returns {string} transaction hash
+ */
+export function getSafeTransactionHash(receipt: ethers.providers.TransactionReceipt | EthersV6TxReceipt): string {
+  if ('transactionHash' in receipt) {
+    return receipt.transactionHash;
+  }
+  return receipt.hash;
+}
+/**
+ * Safely returns contract abstraction that could be from v5 or v6 of ethers.js api
+ * @param {string} address
+ * @param {ethers.ContractInterface | Interface | InterfaceAbi} abi
+ * @param {ArchiveJsonRpcProvider} provider
+ * @returns {EthersV6Contract | ethers.Contract} contract abstraction
+ */
+export function getContractFromEthers(address: string, abi: any, provider: ArchiveJsonRpcProvider) {
+  if (isEthersV6Provider(provider)) {
+    return new EthersV6Contract(address, abi, provider);
+  }
+  return new ethers.Contract(address, abi, provider);
 }
 
-export async function executeCallOrSendSolana(
-  rpcInfos: RpcInfo[],
-  networkId: number | string,
-  rpcProviderFn: (conn: web3_solana.Connection) => Promise<any>,
-  requestId?: string,
-  attemptFallback = true,
-): Promise<any> {
-  const sender = new SolanaRPCSender(rpcInfos, networkId, rpcProviderFn, requestId, attemptFallback);
-  return sender.executeWithFallbacks();
+function isEthersV6Provider(provider: ArchiveJsonRpcProvider): provider is JsonRpcProvider {
+  return typeof provider.getFeeData === 'function';
 }

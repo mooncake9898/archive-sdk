@@ -22,7 +22,7 @@ class RPCOracle {
         for (const rpc of this.rpcInfos) {
             weightSum += rpc.weight;
             if (randomWeight < weightSum) {
-                return rpc.url;
+                return rpc;
             }
         }
     }

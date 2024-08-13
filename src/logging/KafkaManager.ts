@@ -1,7 +1,7 @@
+import { ArchiveJsonRpcProvider } from '../web3-wrapper/networkConfigurations';
 import { MyRequestConfig } from './config/axios.config';
 import { defaultKafkaConfig } from './kafkaConfig';
 import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailureQueue } from './types';
-import { ethers } from 'ethers';
 import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
 
 export class KafkaManager {
@@ -133,7 +133,7 @@ export class KafkaManager {
   async sendRpcFailureToKafka(
     rpcEndpoint: string,
     networkId: string,
-    rpcProviderFn: (provider: ethers.providers.StaticJsonRpcProvider) => Promise<any>,
+    rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     errorMessage: string,
     requestId?: string,
   ): Promise<void> {
