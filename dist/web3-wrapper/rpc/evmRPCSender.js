@@ -75,7 +75,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                 timeout: this.timeoutMilliseconds,
             }));
         }
-        if (selectedRpc.requiresProxy) {
+        if (selectedRpc.requiresProxy && this.proxyServerUrl) {
             return this.getProxyRPCProvider(selectedRpc.url);
         }
         return new ethers_1.ethers.providers.StaticJsonRpcProvider({

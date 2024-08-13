@@ -23,7 +23,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     private networkId: number | string,
     private networkName: string,
     private rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
-    private proxyServerUrl: string,
+    private proxyServerUrl?: string,
     private requestId?: string,
     private attemptFallback = true,
   ) {
@@ -86,7 +86,7 @@ export class EvmRPCSender extends AbstractRPCSender {
       );
     }
 
-    if (selectedRpc.requiresProxy) {
+    if (selectedRpc.requiresProxy && this.proxyServerUrl) {
       return this.getProxyRPCProvider(selectedRpc.url);
     }
 
