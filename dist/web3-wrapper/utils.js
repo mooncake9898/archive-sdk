@@ -30,6 +30,6 @@ function getContractFromEthers(address, abi, provider) {
 }
 exports.getContractFromEthers = getContractFromEthers;
 function isEthersV6Provider(provider) {
-    return typeof provider.getFeeData === 'function';
+    return typeof provider.broadcastTransaction === 'function';
 }
 //# sourceMappingURL=utils.js.map
