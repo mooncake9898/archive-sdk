@@ -27,6 +27,6 @@ export function getContractFromEthers(address: string, abi: any, provider: Archi
   return new ethers.Contract(address, abi, provider);
 }
 
-function isEthersV6Provider(provider: ArchiveJsonRpcProvider): provider is JsonRpcProvider {
-  return typeof provider.getFeeData === 'function';
+function isEthersV6Provider(provider: any): provider is JsonRpcProvider {
+  return typeof provider.broadcastTransaction === 'function';
 }
