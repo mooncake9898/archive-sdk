@@ -64,8 +64,12 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                 }
                 const dbCached = yield this.apiCallResultsRepo.findOneBy({ key });
                 if (dbCached) {
-                    if (dbCached.value['type'] === 'BigNumber')
+                    if (Array.isArray(dbCached.value)) {
+                        return dbCached.value.map(e => e['type'] === 'BigNumber' ? (0, bignumber_js_1.default)(e['hex']) : e);
+                    }
+                    if (dbCached.value['type'] === 'BigNumber') {
                         return (0, bignumber_js_1.default)(dbCached.value['hex']);
+                    }
                     return dbCached.value;
                 }
                 // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.

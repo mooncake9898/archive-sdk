@@ -52,7 +52,14 @@ export class ExternalResponseCacheService {
       const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
 
       if (dbCached) {
-        if (dbCached.value['type'] === 'BigNumber') return BigNumber(dbCached.value['hex']);
+        if (Array.isArray(dbCached.value)) {
+          return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? BigNumber(e['hex']) : e));
+        }
+
+        if (dbCached.value['type'] === 'BigNumber') {
+          return BigNumber(dbCached.value['hex']);
+        }
+
         return dbCached.value;
       }
 
