@@ -34,7 +34,6 @@ const apiCallResults_entity_1 = require("./apiCallResults.entity");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const async_redis_1 = __importDefault(require("async-redis"));
-const bignumber_js_1 = __importDefault(require("bignumber.js"));
 const ethers_1 = require("ethers");
 const typeorm_2 = require("typeorm");
 let ExternalResponseCacheService = ExternalResponseCacheService_1 = class ExternalResponseCacheService {
@@ -60,17 +59,11 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
             try {
                 const cached = yield this.cache.get(key);
                 if (cached) {
-                    return JSON.parse(cached, this.reviver);
+                    return JSON.parse(cached, this.redisCacheReviver);
                 }
                 const dbCached = yield this.apiCallResultsRepo.findOneBy({ key });
                 if (dbCached) {
-                    if (Array.isArray(dbCached.value)) {
-                        return dbCached.value.map(e => e['type'] === 'BigNumber' ? (0, bignumber_js_1.default)(e['hex']) : e);
-                    }
-                    if (dbCached.value['type'] === 'BigNumber') {
-                        return (0, bignumber_js_1.default)(dbCached.value['hex']);
-                    }
-                    return dbCached.value;
+                    return this.dbCacheReviver(dbCached);
                 }
                 // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
                 const entity = yield onCacheMiss();
@@ -142,7 +135,7 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
             return value;
         }
     }
-    reviver(key, value) {
+    redisCacheReviver(key, value) {
         if (typeof value === 'object' && value !== null) {
             if (value.dataType === 'Map') {
                 return new Map(value.value);
@@ -152,6 +145,15 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
             }
         }
         return value;
+    }
+    dbCacheReviver(dbCached) {
+        if (Array.isArray(dbCached.value)) {
+            return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? ethers_1.ethers.BigNumber.from(e['hex']) : e));
+        }
+        if (dbCached.value['type'] === 'BigNumber') {
+            return ethers_1.ethers.BigNumber.from(dbCached.value['hex']);
+        }
+        return dbCached.value;
     }
 };
 exports.ExternalResponseCacheService = ExternalResponseCacheService;

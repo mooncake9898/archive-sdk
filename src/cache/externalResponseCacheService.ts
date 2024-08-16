@@ -5,7 +5,6 @@ import { ApiCallResults } from './apiCallResults.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import AsyncRedis from 'async-redis';
-import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 import { Repository } from 'typeorm';
 
@@ -46,21 +45,13 @@ export class ExternalResponseCacheService {
     try {
       const cached = await this.cache.get(key);
       if (cached) {
-        return JSON.parse(cached, this.reviver);
+        return JSON.parse(cached, this.redisCacheReviver);
       }
 
       const dbCached = await this.apiCallResultsRepo.findOneBy({ key });
 
       if (dbCached) {
-        if (Array.isArray(dbCached.value)) {
-          return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? BigNumber(e['hex']) : e));
-        }
-
-        if (dbCached.value['type'] === 'BigNumber') {
-          return BigNumber(dbCached.value['hex']);
-        }
-
-        return dbCached.value;
+        return this.dbCacheReviver(dbCached);
       }
 
       // No cached data, so perform the operation and store the result to db if it's a valid response and PERM_CACHE_DURATION.
@@ -138,7 +129,7 @@ export class ExternalResponseCacheService {
     }
   }
 
-  private reviver(
+  private redisCacheReviver(
     key: any,
     value: {
       dataType: string;
@@ -153,5 +144,17 @@ export class ExternalResponseCacheService {
       }
     }
     return value;
+  }
+
+  private dbCacheReviver(dbCached: ApiCallResults) {
+    if (Array.isArray(dbCached.value)) {
+      return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? ethers.BigNumber.from(e['hex']) : e));
+    }
+
+    if (dbCached.value['type'] === 'BigNumber') {
+      return ethers.BigNumber.from(dbCached.value['hex']);
+    }
+
+    return dbCached.value;
   }
 }
