@@ -146,14 +146,17 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
         }
         return value;
     }
+    maybeTransformToBN(value) {
+        if (value['type'] === 'BigNumber') {
+            return ethers_1.ethers.BigNumber.from(value['hex']);
+        }
+        return value;
+    }
     dbCacheReviver(dbCached) {
         if (Array.isArray(dbCached.value)) {
-            return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? ethers_1.ethers.BigNumber.from(e['hex']) : e));
+            return dbCached.value.map((e) => this.maybeTransformToBN(e));
         }
-        if (dbCached.value['type'] === 'BigNumber') {
-            return ethers_1.ethers.BigNumber.from(dbCached.value['hex']);
-        }
-        return dbCached.value;
+        return this.maybeTransformToBN(dbCached.value);
     }
 };
 exports.ExternalResponseCacheService = ExternalResponseCacheService;

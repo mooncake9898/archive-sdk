@@ -31,5 +31,6 @@ export declare class ExternalResponseCacheService {
   private maybeAddPrefix;
   private replacer;
   private redisCacheReviver;
+  private maybeTransformToBN;
   private dbCacheReviver;
 }

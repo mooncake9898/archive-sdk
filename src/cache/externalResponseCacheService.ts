@@ -146,15 +146,18 @@ export class ExternalResponseCacheService {
     return value;
   }
 
+  private maybeTransformToBN(value: any) {
+    if (value['type'] === 'BigNumber') {
+      return ethers.BigNumber.from(value['hex']);
+    }
+    return value;
+  }
+
   private dbCacheReviver(dbCached: ApiCallResults) {
     if (Array.isArray(dbCached.value)) {
-      return dbCached.value.map((e) => (e['type'] === 'BigNumber' ? ethers.BigNumber.from(e['hex']) : e));
+      return dbCached.value.map((e) => this.maybeTransformToBN(e));
     }
 
-    if (dbCached.value['type'] === 'BigNumber') {
-      return ethers.BigNumber.from(dbCached.value['hex']);
-    }
-
-    return dbCached.value;
+    return this.maybeTransformToBN(dbCached.value);
   }
 }
