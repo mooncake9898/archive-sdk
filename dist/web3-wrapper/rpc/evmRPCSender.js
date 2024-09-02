@@ -69,6 +69,9 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         return networkId === constants_1.CHAINID.OPTIMISM || networkId === constants_1.CHAINID.BASE;
     }
     getProviderForCall(selectedRpc) {
+        if (!selectedRpc) {
+            selectedRpc = this.rpcOracle.getNextAvailableRpc();
+        }
         if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
             return (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
                 url: selectedRpc.url,
