@@ -38,6 +38,9 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
     }
     executeCallOrSend() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!this.rpcProviderFn) {
+                throw new Error('RPC Provider function is not defined');
+            }
             for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
                 const selectedRpc = this.rpcOracle.getNextAvailableRpc();
                 if (!selectedRpc) {
