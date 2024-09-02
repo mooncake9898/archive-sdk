@@ -22,7 +22,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     rpcInfos: RpcInfo[],
     private networkId: number | string,
     private networkName: string,
-    private rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
+    private rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     private proxyServerUrl?: string,
     private requestId?: string,
     private attemptFallback = true,
@@ -37,6 +37,10 @@ export class EvmRPCSender extends AbstractRPCSender {
   }
 
   public async executeCallOrSend(): Promise<any> {
+    if (!this.rpcProviderFn) {
+      throw new Error('RPC Provider function is not defined');
+    }
+
     for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
       const selectedRpc = this.rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {

@@ -5,7 +5,7 @@ import { AbstractRPCSender } from './abstractRPCSender';
 export declare class EvmRPCSender extends AbstractRPCSender {
   private networkId;
   private networkName;
-  private rpcProviderFn;
+  private rpcProviderFn?;
   private proxyServerUrl?;
   private requestId?;
   private attemptFallback;
@@ -17,7 +17,7 @@ export declare class EvmRPCSender extends AbstractRPCSender {
     rpcInfos: RpcInfo[],
     networkId: number | string,
     networkName: string,
-    rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
+    rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     proxyServerUrl?: string,
     requestId?: string,
     attemptFallback?: boolean,
