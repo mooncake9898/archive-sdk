@@ -16,10 +16,13 @@ class RPCOracle {
         return ((_a = this.rpcInfos) === null || _a === void 0 ? void 0 : _a.length) || 0;
     }
     getNextAvailableRpc() {
-        const totalWeight = this.rpcInfos.reduce((accumulator, rpc) => accumulator + rpc.weight, 0);
+        return RPCOracle.randomSelectRpc(this.rpcInfos);
+    }
+    static randomSelectRpc(rpcInfos) {
+        const totalWeight = rpcInfos.reduce((accumulator, rpc) => accumulator + rpc.weight, 0);
         const randomWeight = Math.random() * totalWeight;
         let weightSum = 0;
-        for (const rpc of this.rpcInfos) {
+        for (const rpc of rpcInfos) {
             weightSum += rpc.weight;
             if (randomWeight < weightSum) {
                 return rpc;
