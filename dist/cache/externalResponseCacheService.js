@@ -128,7 +128,7 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                 value: Array.from(value.entries()), // or with spread: value: [...value]
             };
         }
-        else if (this[key] instanceof ethers_1.ethers.BigNumber) {
+        else if (this[key] instanceof ethers_1.ethers.BigNumber || typeof this[key] === 'bigint') {
             return { dataType: 'ethers.BigNumber', value: this[key].toString() };
         }
         else {
