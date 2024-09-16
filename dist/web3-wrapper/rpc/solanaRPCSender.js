@@ -39,6 +39,9 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     continue;
                 }
                 try {
+                    if (attempt > 0) {
+                        this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`);
+                    }
                     const start = perf_hooks_1.performance.now();
                     const connection = selectedRpc.requiresProxy
                         ? this.getProxyConnection(selectedRpc.url)

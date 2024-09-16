@@ -48,6 +48,9 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                 }
                 const kafkaManager = logging_1.KafkaManager.getInstance();
                 try {
+                    if (attempt > 0) {
+                        this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`);
+                    }
                     const start = perf_hooks_1.performance.now();
                     const result = yield this.rpcProviderFn(this.getProviderForCall(selectedRpc));
                     const end = perf_hooks_1.performance.now();
