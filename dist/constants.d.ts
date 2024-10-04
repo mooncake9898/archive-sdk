@@ -19,5 +19,7 @@ export declare enum CHAINID {
     RONIN = "2020",
     BEACON = "eth2",
     BASE = "8453",
-    AVAX_PCHAIN = "-9797"
+    AVAX_PCHAIN = "-9797",
+    ZKSYNC = "324",
+    SCROLL = "534352"
 }
