@@ -24,5 +24,7 @@ var CHAINID;
     CHAINID["BEACON"] = "eth2";
     CHAINID["BASE"] = "8453";
     CHAINID["AVAX_PCHAIN"] = "-9797";
+    CHAINID["ZKSYNC"] = "324";
+    CHAINID["SCROLL"] = "534352";
 })(CHAINID || (exports.CHAINID = CHAINID = {}));
 //# sourceMappingURL=constants.js.map
