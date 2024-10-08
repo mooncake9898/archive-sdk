@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NullOpGasOracle = void 0;
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 class NullOpGasOracle {
-    getTxnFeeUsd(txn) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getTxnFeeUsd(_txn) {
         return Promise.resolve((0, bignumber_js_1.default)(0));
     }
 }

@@ -3,5 +3,5 @@ import { GasOracle } from './gasOracle';
 import BigNumber from 'bignumber.js';
 
 export declare class NullOpGasOracle implements GasOracle {
-  getTxnFeeUsd(txn: TransactionDetails): Promise<BigNumber>;
+  getTxnFeeUsd(_txn: TransactionDetails): Promise<BigNumber>;
 }

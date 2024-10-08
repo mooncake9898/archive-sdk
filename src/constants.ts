@@ -20,6 +20,8 @@ export enum CHAINID {
   BEACON = 'eth2',
   BASE = '8453',
   AVAX_PCHAIN = '-9797',
+  ZKSYNC = '324',
+  SCROLL = '534352',
 }
 
 export const MAX_RETRY_ATTEMPTS = 3;

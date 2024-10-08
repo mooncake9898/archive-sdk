@@ -18,6 +18,7 @@ class SolanaNetworkConfig {
     isContractNameLookupEnabled() {
         return true;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getBlockTimeOracle(_context) {
         return new nullOpBlockTimeOracle_1.NullOpBlockTimeOracle();
     }
