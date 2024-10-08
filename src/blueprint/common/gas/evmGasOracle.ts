@@ -1,6 +1,6 @@
 import { BlueprintContext } from '../../models/blueprintContext';
-import { GasOracle } from './gasOracle';
 import { TransactionDetails } from '../../models/transactionDetails';
+import { GasOracle } from './gasOracle';
 import BigNumber from 'bignumber.js';
 
 export class EvmGasOracle implements GasOracle {

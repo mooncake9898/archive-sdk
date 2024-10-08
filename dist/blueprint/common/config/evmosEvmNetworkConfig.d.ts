@@ -1,10 +1,11 @@
-import { BlueprintContext } from '../../models/blueprintContext';
-import { GasOracle } from '../gas/gasOracle';
+import { GasOracle } from '../../../blueprint/common/gas/gasOracle';
+import { BlueprintContext } from '../../../blueprint/models';
 import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
-export declare class EvmosEvmNetworkConfig extends BaseEvmNetworkConfig {
-    getInitStartBlock(): number;
-    getNetwork(): number;
-    getNetworkName(): string;
-    isContractNameLookupEnabled(): boolean;
-    getGasOracle(context: BlueprintContext): GasOracle;
+
+export declare abstract class EvmosEvmNetworkConfig extends BaseEvmNetworkConfig {
+  getInitStartBlock(): number;
+  getNetwork(): number;
+  getNetworkName(): string;
+  isContractNameLookupEnabled(): boolean;
+  getGasOracle(context: BlueprintContext): GasOracle;
 }

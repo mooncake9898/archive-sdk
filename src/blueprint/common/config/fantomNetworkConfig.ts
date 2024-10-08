@@ -1,8 +1,7 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class FantomNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class FantomNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 3500000;
   }

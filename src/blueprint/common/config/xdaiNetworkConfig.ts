@@ -1,8 +1,7 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class XdaiNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class XdaiNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 11813493;
   }

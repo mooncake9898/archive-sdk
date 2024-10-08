@@ -23,7 +23,7 @@ export interface Blueprint {
   classifyTransaction(context: BlueprintContext, txn: TransactionDetails): Promise<Classification[]>;
   getCurrentPositionValue(positionContext: PositionContext): Promise<PositionValue>;
   getPositionValueAt(positionContext: PositionContext, timeContext: TimeContext): Promise<PositionValue>;
-  getUserList(fromBlock: number): Promise<string[]>;
+  getUserList(fromBlock: number, limit?: number, offset?: number): Promise<string[]>;
   syncMetadata(metadataStore: MetadataStore, lastSyncAt: number): Promise<number>; // returns last synced timestamp
   syncMetadataInterval(): number; // returns the number of seconds the system should sync after the last sync
 }

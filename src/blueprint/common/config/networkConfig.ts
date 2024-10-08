@@ -1,4 +1,4 @@
-import { BlueprintContext } from '../../models/blueprintContext';
+import { BlueprintContext } from '../../../blueprint/models';
 import { BlockTimeOracle } from '../blocktime/blockTimeOracle';
 import { GasOracle } from '../gas/gasOracle';
 import { TokenMetadataOracle } from '../token/tokenMetadataOracle';
@@ -10,15 +10,13 @@ export interface NetworkConfig {
 
   getInitStartBlock(): number;
 
-  // gets the user lp transactions subgraph urls
   isContractNameLookupEnabled(): boolean;
 
-  // getMainProviderUrl(): string;
+  getMainProviderUrl(): Promise<string>;
 
   getGasOracle(context: BlueprintContext): GasOracle;
 
   getTokenMetadataOracle(context: BlueprintContext): TokenMetadataOracle;
 
-  // TODO: activate
-  // getBlockTimeOracle(context: BlueprintContext): BlockTimeOracle;
+  getBlockTimeOracle(context: BlueprintContext): BlockTimeOracle;
 }

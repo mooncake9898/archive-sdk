@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HarmonyNetworkConfig = void 0;
-const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
 const constants_1 = require("../../../constants");
+const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
 class HarmonyNetworkConfig extends baseEvmNetworkConfig_1.BaseEvmNetworkConfig {
     getInitStartBlock() {
         return 10178693;

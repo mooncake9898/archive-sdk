@@ -1,10 +1,10 @@
+import { KafkaManager } from '../logging';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { InternalAxiosRequestConfig } from 'axios';
 import { buildMemoryStorage, setupCache } from 'axios-cache-interceptor';
 import { CacheAxiosResponse } from 'axios-cache-interceptor/dist/cache/axios';
 import axiosRetry from 'axios-retry';
 import { CreateAxiosDefaults } from 'axios/index';
-import { KafkaManager } from '../logging';
 
 export interface MyRequestConfig extends InternalAxiosRequestConfig {
   metadata: {

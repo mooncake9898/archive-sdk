@@ -1,8 +1,7 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class EthereumNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class EthereumNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 9562480;
   }

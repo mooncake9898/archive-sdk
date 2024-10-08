@@ -1,16 +1,26 @@
-import { Operation } from './operation';
+import { Operation } from '../../blueprint/models/operation';
 import { PositionShares } from './positionShares';
 import BigNumber from 'bignumber.js';
 
 export class Classification {
+  operations: Operation[];
+  // unique identifier
+  positionIdentifier: string;
+  // gas token amount spent for transaction
+  gasTokenAmount: BigNumber;
+  positionShareDetails: PositionShares[];
+
   constructor(
-    public operations: Operation[],
-    // unique identifier
-    public positionIdentifier: string,
-    // gas token amount spent for transaction
-    public gasTokenAmount = BigNumber(0),
-    public positionShareDetails: PositionShares[],
-  ) {}
+    operations: Operation[],
+    positionIdentifier: string,
+    gasTokenAmount = BigNumber(0),
+    positionShareDetails: PositionShares[],
+  ) {
+    this.operations = operations;
+    this.positionIdentifier = positionIdentifier;
+    this.gasTokenAmount = gasTokenAmount;
+    this.positionShareDetails = positionShareDetails;
+  }
 
   getSharesAdded(): BigNumber {
     if (this.operations.length == 0) return BigNumber(0);

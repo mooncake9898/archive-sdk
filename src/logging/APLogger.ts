@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { KafkaManager } from './KafkaManager';
-import * as log4js from 'log4js';
 import { LogQueue, Queues } from './types';
+import * as log4js from 'log4js';
 
 interface AppenderInterface {
   stdoutAppender: (

@@ -1,5 +1,5 @@
-import { config } from 'dotenv';
 import { LoggerManager } from '../logging';
+import { config } from 'dotenv';
 
 config();
 

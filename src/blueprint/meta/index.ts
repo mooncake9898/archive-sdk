@@ -1,1 +1,1 @@
-export * from './metadataStore'
+export * from './metadataStore';

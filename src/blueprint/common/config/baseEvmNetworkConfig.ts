@@ -1,19 +1,18 @@
-import { BlueprintContext } from '../../models/blueprintContext';
+import { BlueprintContext } from '../../../blueprint/models';
+import { RPCOracle, RpcInfo } from '../../../web3-wrapper';
 import { BlockTimeOracle } from '../blocktime/blockTimeOracle';
 import { EvmGasOracle } from '../gas/evmGasOracle';
 import { GasOracle } from '../gas/gasOracle';
-import { EvmTokenMetadataOracle } from '../token/evmTokenMetadataOracle';
 import { TokenMetadataOracle } from '../token/tokenMetadataOracle';
 import { NetworkConfig } from './networkConfig';
 
 export abstract class BaseEvmNetworkConfig implements NetworkConfig {
   protected gasOracle: GasOracle;
   protected tokenMetadataOracle: TokenMetadataOracle;
-  private blockTimeOracle: BlockTimeOracle;
 
   abstract getInitStartBlock(): number;
 
-  // abstract getMainProviderUrl(): string;
+  abstract getMainProviderUrl(): Promise<string>;
 
   abstract getNetwork(): number;
 
@@ -21,12 +20,9 @@ export abstract class BaseEvmNetworkConfig implements NetworkConfig {
 
   abstract isContractNameLookupEnabled(): boolean;
 
-  getTokenMetadataOracle(context: BlueprintContext): TokenMetadataOracle {
-    if (!this.tokenMetadataOracle) {
-      this.tokenMetadataOracle = new EvmTokenMetadataOracle(context);
-    }
-    return this.tokenMetadataOracle;
-  }
+  abstract getTokenMetadataOracle(context: BlueprintContext): TokenMetadataOracle;
+
+  abstract getBlockTimeOracle(context: BlueprintContext): BlockTimeOracle;
 
   getGasOracle(context: BlueprintContext): GasOracle {
     if (!this.gasOracle) {
@@ -35,11 +31,9 @@ export abstract class BaseEvmNetworkConfig implements NetworkConfig {
     return this.gasOracle;
   }
 
-  // TODO: activate
-  // getBlockTimeOracle(context: BlueprintContext): BlockTimeOracle {
-  //   if (!this.blockTimeOracle) {
-  //     this.blockTimeOracle = new EvmBlockTimeOracle(context);
-  //   }
-  //   return this.blockTimeOracle;
-  // }
+  selectRpcUrl(rpcInfos: RpcInfo[]): string {
+    if (!rpcInfos || rpcInfos.length) return null;
+
+    return RPCOracle.randomSelectRpc(rpcInfos)?.url;
+  }
 }

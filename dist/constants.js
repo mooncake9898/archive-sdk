@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CHAINID = void 0;
+exports.AXIOS_DEFAULT_CONFIG = exports.TEN_MINS = exports.ONE_MIN = exports.MAX_RETRY_ATTEMPTS = exports.CHAINID = void 0;
 var CHAINID;
 (function (CHAINID) {
     CHAINID["ETHEREUM"] = "1";
@@ -25,4 +25,13 @@ var CHAINID;
     CHAINID["BASE"] = "8453";
     CHAINID["AVAX_PCHAIN"] = "-9797";
 })(CHAINID || (exports.CHAINID = CHAINID = {}));
+exports.MAX_RETRY_ATTEMPTS = 3;
+exports.ONE_MIN = 1000 * 60;
+exports.TEN_MINS = exports.ONE_MIN * 10;
+exports.AXIOS_DEFAULT_CONFIG = {
+    headers: {
+        'Accept-Encoding': '*',
+    },
+    timeout: exports.ONE_MIN,
+};
 //# sourceMappingURL=constants.js.map

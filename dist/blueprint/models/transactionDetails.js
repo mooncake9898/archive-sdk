@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionDetails = void 0;
+exports.TransactionData = exports.TransactionDetailsWithHeadBlock = exports.TransactionDetails = void 0;
 /**
  * Represents a TransactionDetails from the blueprint
  */
@@ -23,4 +23,19 @@ class TransactionDetails {
     }
 }
 exports.TransactionDetails = TransactionDetails;
+class TransactionDetailsWithHeadBlock {
+    constructor(headBlock, transactionDetails) {
+        this.headBlock = headBlock;
+        this.transactionDetails = transactionDetails;
+    }
+}
+exports.TransactionDetailsWithHeadBlock = TransactionDetailsWithHeadBlock;
+class TransactionData {
+    constructor(transactionDetails, transactionIndex, isLast) {
+        this.transactionDetails = transactionDetails;
+        this.transactionIndex = transactionIndex;
+        this.isLast = isLast;
+    }
+}
+exports.TransactionData = TransactionData;
 //# sourceMappingURL=transactionDetails.js.map
