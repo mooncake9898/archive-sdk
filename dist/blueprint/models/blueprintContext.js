@@ -21,7 +21,6 @@ class BlueprintContext {
         this.loggingContext = loggingContext;
         this.initialized = false;
         this.childrenBPs = [];
-        this.configService = loggingContext.getConfigService();
         this.cache = loggingContext.getCache();
         this.kafkaManager = logging_1.KafkaManager.getInstance();
         this.metadataStore = metadataStore;
@@ -70,9 +69,6 @@ class BlueprintContext {
             this.exchangePrice = new exchangePrice_1.ExchangePrice(this);
         }
         return this.exchangePrice;
-    }
-    getConfigService() {
-        return this.configService;
     }
     generateCacheKey(prefix, composedKey) {
         return `${prefix}_${composedKey}_${this.getNetwork()}`;

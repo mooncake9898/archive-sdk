@@ -6,6 +6,6 @@ export class PositionValue {
     readonly positionValueUsd: number,
     readonly positionShareDetails: PositionShares[],
     readonly pendingIncome: TokenInfo[] = [],
-    readonly tokenAmounts: TokenInfo[] = [], // underlying tokens that constitute the positionValue (no LP tokens)
+    readonly tokenAmounts: TokenInfo[] = [], // non receipt tokens that constitute the positionValue (no LP tokens)
   ) {}
 }

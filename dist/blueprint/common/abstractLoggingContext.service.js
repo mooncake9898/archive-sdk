@@ -13,21 +13,16 @@ exports.AbstractLoggingContext = exports.REQUEST_ID = void 0;
 const logger_1 = require("../../axios/logger");
 const cache_1 = require("../../cache");
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 exports.REQUEST_ID = 'requestId';
 let AbstractLoggingContext = class AbstractLoggingContext {
-    constructor(cache, configService) {
+    constructor(cache) {
         this.cache = cache;
-        this.configService = configService;
     }
     get requestId() {
         return this._requestId;
     }
     set requestId(value) {
         this._requestId = value;
-    }
-    getConfigService() {
-        return this.configService;
     }
     getCache() {
         return this.cache;
@@ -41,7 +36,6 @@ let AbstractLoggingContext = class AbstractLoggingContext {
 exports.AbstractLoggingContext = AbstractLoggingContext;
 exports.AbstractLoggingContext = AbstractLoggingContext = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [cache_1.ExternalResponseCacheService,
-        config_1.ConfigService])
+    __metadata("design:paramtypes", [cache_1.ExternalResponseCacheService])
 ], AbstractLoggingContext);
 //# sourceMappingURL=abstractLoggingContext.service.js.map

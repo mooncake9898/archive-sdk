@@ -9,7 +9,6 @@ import { DefiPriceAPIInterface } from '../../blueprint/models/defiPriceAPIInterf
 import { ExchangePrice } from '../../blueprint/models/exchangePrice';
 import { ExternalResponseCacheService } from '../../cache';
 import { KafkaManager } from '../../logging';
-import { ConfigService } from '@nestjs/config';
 import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
 import { Logger } from 'log4js';
@@ -26,7 +25,6 @@ export declare abstract class BlueprintContext {
   protected axiosManager: ApAxiosManager;
   protected readonly kafkaManager: KafkaManager;
   protected readonly cache: ExternalResponseCacheService;
-  protected readonly configService: ConfigService;
   includeChildrenBPs: boolean | null;
   protected walletAddresses: string[];
   protected initialized: boolean;
@@ -52,7 +50,6 @@ export declare abstract class BlueprintContext {
   getChildrenBlueprints(): Blueprint[];
   getWalletAddresses(): string[];
   getExchangePrice(): ExchangePrice;
-  getConfigService(): ConfigService<Record<string, unknown>, false>;
   generateCacheKey(prefix: string, composedKey: string): string;
   cacheOrPerform(cacheKey: any, ttl: any, onCacheMiss: any): Promise<any>;
   /**
@@ -76,4 +73,5 @@ export declare abstract class BlueprintContext {
   abstract getComposedBlueprintKey(): string | null;
   abstract getContractReader(): any;
   abstract getContractReaderByNetwork(network: number | string): any;
+  abstract getConfigService(): any;
 }

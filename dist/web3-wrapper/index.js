@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RPCOracle = exports.RpcInfo = exports.getContractFromEthers = exports.getSafeTransactionHash = exports.RpcConfig = exports.Configuration = exports.SolanaRPCSender = exports.EvmRPCSender = void 0;
+exports.RPCOracle = exports.ArchiveLogger = exports.RpcInfo = exports.getContractFromEthers = exports.getSafeTransactionHash = exports.RpcConfig = exports.Configuration = exports.SolanaRPCSender = exports.EvmRPCSender = void 0;
 var evmRPCSender_1 = require("./rpc/evmRPCSender");
 Object.defineProperty(exports, "EvmRPCSender", { enumerable: true, get: function () { return evmRPCSender_1.EvmRPCSender; } });
 var solanaRPCSender_1 = require("./rpc/solanaRPCSender");
@@ -13,6 +13,8 @@ Object.defineProperty(exports, "getSafeTransactionHash", { enumerable: true, get
 Object.defineProperty(exports, "getContractFromEthers", { enumerable: true, get: function () { return utils_1.getContractFromEthers; } });
 var rpcInfo_1 = require("./rpc/rpcInfo");
 Object.defineProperty(exports, "RpcInfo", { enumerable: true, get: function () { return rpcInfo_1.RpcInfo; } });
+var logger_1 = require("./logger");
+Object.defineProperty(exports, "ArchiveLogger", { enumerable: true, get: function () { return logger_1.ArchiveLogger; } });
 var rpcOracle_1 = require("./rpc/rpcOracle");
 Object.defineProperty(exports, "RPCOracle", { enumerable: true, get: function () { return rpcOracle_1.RPCOracle; } });
 //# sourceMappingURL=index.js.map

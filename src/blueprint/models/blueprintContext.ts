@@ -10,7 +10,6 @@ import { ExchangePrice } from '../../blueprint/models/exchangePrice';
 import { ExternalResponseCacheService } from '../../cache';
 import { AXIOS_DEFAULT_CONFIG, CHAINID } from '../../constants';
 import { KafkaManager } from '../../logging';
-import { ConfigService } from '@nestjs/config';
 import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
 import { Logger } from 'log4js';
@@ -25,7 +24,6 @@ export abstract class BlueprintContext {
   protected axiosManager: ApAxiosManager;
   protected readonly kafkaManager: KafkaManager;
   protected readonly cache: ExternalResponseCacheService;
-  protected readonly configService: ConfigService;
   includeChildrenBPs: boolean | null;
   protected walletAddresses: string[];
   protected initialized: boolean = false;
@@ -40,7 +38,6 @@ export abstract class BlueprintContext {
     defiPriceApi?: DefiPriceAPIInterface,
     blockByDateApi?: BlockByDateAPIInterface,
   ) {
-    this.configService = loggingContext.getConfigService();
     this.cache = loggingContext.getCache();
     this.kafkaManager = KafkaManager.getInstance();
     this.metadataStore = metadataStore;
@@ -101,10 +98,6 @@ export abstract class BlueprintContext {
       this.exchangePrice = new ExchangePrice(this);
     }
     return this.exchangePrice;
-  }
-
-  public getConfigService() {
-    return this.configService;
   }
 
   public generateCacheKey(prefix: string, composedKey: string): string {
@@ -204,6 +197,7 @@ export abstract class BlueprintContext {
 
   abstract setNetworkConfig(networkId): NetworkConfig;
   abstract getComposedBlueprintKey(): string | null;
-  abstract getContractReader();
   abstract getContractReaderByNetwork(network: number | string);
+  abstract getContractReader();
+  abstract getConfigService();
 }
