@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EvmosEvmNetworkConfig = void 0;
-const evmGasOracle_1 = require("../gas/evmGasOracle");
-const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
+const evmGasOracle_1 = require("../../../blueprint/common/gas/evmGasOracle");
 const constants_1 = require("../../../constants");
+const baseEvmNetworkConfig_1 = require("./baseEvmNetworkConfig");
 class EvmosEvmNetworkConfig extends baseEvmNetworkConfig_1.BaseEvmNetworkConfig {
     getInitStartBlock() {
         return 1;

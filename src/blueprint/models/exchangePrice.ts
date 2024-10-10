@@ -1,19 +1,13 @@
-import { TokenPriceDto } from '../models/tokenPriceDto';
-import { BlueprintContext } from '../models/blueprintContext';
-import { NetworkConfig } from './config/networkConfig';
-import { DefiPriceAPI } from './defiPriceAPI';
-// import { WEVMOS_ADDRESS_EVMOS_CHAIN } from '@src/extensions/evmos_staking/constants';
+import { BlueprintContext } from '../../blueprint/models/blueprintContext';
+import { DefiPriceAPIInterface } from '../../blueprint/models/defiPriceAPIInterface';
+import { TokenPriceDto } from '../../blueprint/models/tokenPriceDto';
 import { CHAINID } from '../../constants';
 
 export class ExchangePrice {
-  
-  private config: NetworkConfig;
-  private priceApi: DefiPriceAPI;
+  private priceApi: DefiPriceAPIInterface;
 
   constructor(private context: BlueprintContext) {
-    
-    this.config = context.getNetworkConfig();
-    this.priceApi = new DefiPriceAPI(context);
+    this.priceApi = context.getDefiPriceAPI();
   }
 
   /**
@@ -35,29 +29,13 @@ export class ExchangePrice {
     return this.priceApi.getBaseGasTokenPrice(blockNumber);
   }
 
-  // async fetchEvmosPrice(evmosBlockNumber: number): Promise<TokenPriceDto> {
-  //   try {
-  //     const priceAtBlock = await this.getGenericPriceOfAt(WEVMOS_ADDRESS_EVMOS_CHAIN, evmosBlockNumber);
-  //     if (!priceAtBlock || priceAtBlock.source == '') {
-  //       const msg = `Evmos price could not be fetched for address ${WEVMOS_ADDRESS_EVMOS_CHAIN} and block ${evmosBlockNumber}. response: ${JSON.stringify(
-  //         priceAtBlock,
-  //       )}`;
-  //       this.context.getLogger().error(msg);
-
-  //       return new TokenPriceDto(0, '', 0);
-  //     }
-  //     return priceAtBlock;
-  //   } catch (error) {
-  //     this.context.getLogger().error(`Error fetching Evmos price: ${error}`);
-
-  //     return new TokenPriceDto(0, '', 0);
-  //   }
-  // }
-
   /*
    * Returns the price of ETH on ethereum network at 'timestamp'
    */
   async getETHPriceAt(timestamp: number): Promise<TokenPriceDto> {
+    if (timestamp === 0) {
+      return this.priceApi.getETHPriceAt(0);
+    }
     const timestampInSeconds = this.convertTimestampToSeconds(timestamp);
     const blockNumber = await this.context
       .getBlockByDateApi()
@@ -69,6 +47,9 @@ export class ExchangePrice {
    * Returns the price of BTC on ethereum network at 'timestamp'
    */
   async getBTCPriceAt(timestamp: number): Promise<TokenPriceDto> {
+    if (timestamp === 0) {
+      return this.priceApi.getBTCPriceAt(0);
+    }
     const timestampInSeconds = this.convertTimestampToSeconds(timestamp);
     const blockNumber = await this.context
       .getBlockByDateApi()

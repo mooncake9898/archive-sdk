@@ -9,7 +9,7 @@ export class TransactionDetails {
   ) {}
 
   static asUniqueList(a: TransactionDetails[]): TransactionDetails[] {
-    const seen: string[] = [];
+    const seen = [];
     return a.filter((item) => {
       const txHash = item.txHash;
       if (seen.includes(txHash)) {
@@ -19,4 +19,19 @@ export class TransactionDetails {
       return true;
     });
   }
+}
+
+export class TransactionDetailsWithHeadBlock {
+  constructor(
+    public headBlock: number,
+    public transactionDetails: TransactionDetails[],
+  ) {}
+}
+
+export class TransactionData {
+  constructor(
+    public transactionDetails: TransactionDetails,
+    public transactionIndex: number,
+    public isLast: boolean,
+  ) {}
 }

@@ -21,5 +21,17 @@ export enum CHAINID {
   BASE = '8453',
   AVAX_PCHAIN = '-9797',
   ZKSYNC = '324',
-  SCROLL = '534352'
+  SCROLL = '534352',
 }
+
+export const MAX_RETRY_ATTEMPTS = 3;
+
+export const ONE_MIN = 1000 * 60;
+export const TEN_MINS = ONE_MIN * 10;
+
+export const AXIOS_DEFAULT_CONFIG = {
+  headers: {
+    'Accept-Encoding': '*',
+  },
+  timeout: ONE_MIN,
+};

@@ -1,4 +1,3 @@
-import { UserProtocolPositionException } from './userProtocolPositionException.entity';
 import { UserProtocolPositionSnapshot } from './userProtocolPositionSnapshot.entity';
 
 export class UserProtocolPosition {

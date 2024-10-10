@@ -37,14 +37,15 @@ export class SolanaRPCSender extends AbstractRPCSender {
 
   public async executeCallOrSend(): Promise<any> {
     for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-
       const selectedRpc = this.rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {
         continue;
       }
       try {
         if (attempt > 0) {
-          this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`);
+          this.logger.info(
+            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`,
+          );
         }
         const start = performance.now();
         const connection = selectedRpc.requiresProxy
@@ -61,8 +62,9 @@ export class SolanaRPCSender extends AbstractRPCSender {
       }
     }
 
-    const errorMessage = `All RPCs failed for networkId: ${this.networkId
-      }, function called: ${this.rpcProviderFn.toString()}`;
+    const errorMessage = `All RPCs failed for networkId: ${
+      this.networkId
+    }, function called: ${this.rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }

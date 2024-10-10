@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArchiveLogger = exports.REQUEST_ID = exports.LogLevel = void 0;
-const dotenv_1 = require("dotenv");
 const logging_1 = require("../logging");
+const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 var LogLevel;
 (function (LogLevel) {

@@ -1,18 +1,15 @@
+import { EvmGasOracle } from '../../../blueprint/common/gas/evmGasOracle';
+import { BlueprintContext } from '../../../blueprint/models';
+import { CHAINID } from '../../../constants';
 import { BlockTimeOracle } from '../blocktime/blockTimeOracle';
 import { NullOpBlockTimeOracle } from '../blocktime/nullOpBlockTimeOracle';
 import { GasOracle } from '../gas/gasOracle';
-import { NullOpGasOracle } from '../gas/nullOpGasOracle';
 import { TokenMetadataOracle } from '../token/tokenMetadataOracle';
 import { NetworkConfig } from './networkConfig';
-import { CHAINID } from '../../../constants';
 
-import { BlueprintContext } from '../../models';
-import { SolanaTokenMetadataOracle } from '../token/solanaTokenMetadataOracle';
-
-export class SolanaNetworkConfig implements NetworkConfig {
-  protected gasOracle: GasOracle;
+export abstract class SolanaNetworkConfig implements NetworkConfig {
   protected tokenMetadataOracle: TokenMetadataOracle;
-  private blockTimeOracle: BlockTimeOracle;
+  protected gasOracle: GasOracle;
 
   getInitStartBlock(): number {
     // https://solscan.io/block/1
@@ -31,19 +28,19 @@ export class SolanaNetworkConfig implements NetworkConfig {
     return true;
   }
 
-  getGasOracle(context: BlueprintContext): GasOracle {
-    // TODO implement this for Solana
-    return new NullOpGasOracle();
-  }
-
-  getTokenMetadataOracle(context: BlueprintContext): TokenMetadataOracle {
-    if (!this.tokenMetadataOracle) {
-      this.tokenMetadataOracle = new SolanaTokenMetadataOracle(context);
-    }
-    return this.tokenMetadataOracle;
-  }
-
-  getBlockTimeOracle(context: BlueprintContext): BlockTimeOracle {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getBlockTimeOracle(_context: BlueprintContext): BlockTimeOracle {
     return new NullOpBlockTimeOracle();
   }
+
+  getGasOracle(context: BlueprintContext): GasOracle {
+    if (!this.gasOracle) {
+      // logic is the same as EVM (gasUsed * gasTokenPrice)
+      this.gasOracle = new EvmGasOracle(context);
+    }
+    return this.gasOracle;
+  }
+
+  abstract getTokenMetadataOracle(context: BlueprintContext): TokenMetadataOracle;
+  abstract getMainProviderUrl(): Promise<string>;
 }

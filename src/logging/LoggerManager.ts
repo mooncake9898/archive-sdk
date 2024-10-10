@@ -1,6 +1,6 @@
-import { Queues } from './types';
 import { APLogger, buildAppender } from './APLogger';
 import { KafkaManager } from './KafkaManager';
+import { Queues } from './types';
 import { KafkaConfig } from 'kafkajs';
 import { Level, Logger } from 'log4js';
 
@@ -31,7 +31,7 @@ export class LoggerManager {
       this.instances.set(blueprintKey, this.buildInstance(blueprintKey));
     }
 
-    APLogger.setLog4jsConfig(buildAppender(this.getKafkaManagerInstance(), topic, blueprintKey))
+    APLogger.setLog4jsConfig(buildAppender(this.getKafkaManagerInstance(), topic, blueprintKey));
     return this.instances.get(blueprintKey);
   }
 

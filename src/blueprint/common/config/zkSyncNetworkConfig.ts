@@ -1,21 +1,20 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
+export abstract class ZkSyncNetworkConfig extends BaseEvmNetworkConfig {
+  getInitStartBlock(): number {
+    return 1;
+  }
 
-export class ZkSyncNetworkConfig extends BaseEvmNetworkConfig {
-    getInitStartBlock(): number {
-        return 1;
-    }
+  getNetwork(): number {
+    return Number(CHAINID.ZKSYNC);
+  }
 
-    getNetwork(): number {
-        return Number(CHAINID.ZKSYNC);
-    }
+  getNetworkName(): string {
+    return 'zkSync';
+  }
 
-    getNetworkName(): string {
-        return 'zkSync';
-    }
-
-    isContractNameLookupEnabled(): boolean {
-        return false;
-    }
+  isContractNameLookupEnabled(): boolean {
+    return false;
+  }
 }

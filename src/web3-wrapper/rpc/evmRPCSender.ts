@@ -49,7 +49,9 @@ export class EvmRPCSender extends AbstractRPCSender {
       const kafkaManager = KafkaManager.getInstance();
       try {
         if (attempt > 0) {
-          this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`);
+          this.logger.info(
+            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`,
+          );
         }
         const start = performance.now();
         const result = await this.rpcProviderFn(this.getProviderForCall(selectedRpc));
@@ -72,8 +74,9 @@ export class EvmRPCSender extends AbstractRPCSender {
       }
     }
 
-    const errorMessage = `All RPCs failed for networkId: ${this.networkId
-      }, function called: ${this.rpcProviderFn.toString()}`;
+    const errorMessage = `All RPCs failed for networkId: ${
+      this.networkId
+    }, function called: ${this.rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }

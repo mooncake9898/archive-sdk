@@ -1,8 +1,7 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class AuroraNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class AuroraNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 45999977;
   }

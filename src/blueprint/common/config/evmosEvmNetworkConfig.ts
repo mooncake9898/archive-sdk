@@ -1,11 +1,10 @@
-import { BlueprintContext } from '../../models/blueprintContext';
-import { EvmGasOracle } from '../gas/evmGasOracle';
-import { GasOracle } from '../gas/gasOracle';
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
+import { EvmGasOracle } from '../../../blueprint/common/gas/evmGasOracle';
+import { GasOracle } from '../../../blueprint/common/gas/gasOracle';
+import { BlueprintContext } from '../../../blueprint/models';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class EvmosEvmNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class EvmosEvmNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 1;
   }

@@ -1,21 +1,16 @@
-
-import { ArchiveLogger } from '../common/archiveLogger';
-// import { VisionCache } from '@src/common/visionCache';
+import { ArchiveLogger } from '../../axios/logger';
+import { ExternalResponseCacheService } from '../../cache';
+import { Queues } from '../../logging';
+import { Injectable } from '@nestjs/common';
 import { Logger } from 'log4js';
-import { Queues } from '../../logging/types';
 
 export const REQUEST_ID = 'requestId';
 
-// export abstract class AbstractLoggingContext {
-  export class AbstractLoggingContext {
+@Injectable()
+export abstract class AbstractLoggingContext {
   private _requestId: string;
-  // private readonly cache: VisionCache;
-  // private readonly configService: ConfigService;
 
-  // constructor(cache: VisionCache, configService: ConfigService) {
-  //   this.cache = cache;
-  //   this.configService = configService;
-  // }
+  constructor(private readonly cache: ExternalResponseCacheService) {}
 
   get requestId(): string {
     return this._requestId;
@@ -25,22 +20,15 @@ export const REQUEST_ID = 'requestId';
     this._requestId = value;
   }
 
-  // getConfigService() {
-  //   return this.configService;
-  // }
-
-  // getCache() {
-  //   return this.cache;
-  // }
-
-  // public getBareAxios(): AxiosInstance {
-  //   axios.defaults.headers.common['X-Request-ID'] = this.loggingContext.requestId;
-  //   return axios;
-  // }
+  getCache() {
+    return this.cache;
+  }
 
   getLogger(blueprintKey: string = null, topic?: Queues): Logger {
     const logger = blueprintKey ? ArchiveLogger.getBlueprintLogger(blueprintKey, topic) : ArchiveLogger.getLogger();
     logger.addContext(REQUEST_ID, this.requestId);
     return logger;
   }
+
+  abstract getConfigService();
 }

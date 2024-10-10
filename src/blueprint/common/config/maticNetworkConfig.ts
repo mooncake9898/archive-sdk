@@ -1,8 +1,7 @@
-import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 import { CHAINID } from '../../../constants';
+import { BaseEvmNetworkConfig } from './baseEvmNetworkConfig';
 
-
-export class MaticNetworkConfig extends BaseEvmNetworkConfig {
+export abstract class MaticNetworkConfig extends BaseEvmNetworkConfig {
   getInitStartBlock(): number {
     return 4931780;
   }

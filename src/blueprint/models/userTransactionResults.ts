@@ -4,5 +4,6 @@ export class UserTransactionResults {
   constructor(
     public userTransactions: TransactionDetails[],
     public lastSyncedBlock: number,
+    public isSyncingDataThroughJob: boolean = false,
   ) {}
 }

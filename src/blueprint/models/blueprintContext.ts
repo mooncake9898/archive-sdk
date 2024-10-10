@@ -1,64 +1,55 @@
-import { AbstractLoggingContext } from '../common/abstractLoggingContext.service';
-import { BlockbydateAPI } from '../common/blockbydateAPI';
-import { ArbitrumNetworkConfig } from '../common/config/arbitrumNetworkConfig';
-import { AuroraNetworkConfig } from '../common/config/auroraNetworkConfig';
-import { AvaxNetworkConfig } from '../common/config/avaxNetworkConfig';
-import { BaseNetworkConfig } from '../common/config/baseNetworkConfig';
-import { BscNetworkConfig } from '../common/config/bscNetworkConfig';
-import { CeloNetworkConfig } from '../common/config/celoNetworkConfig';
-import { EthereumNetworkConfig } from '../common/config/ethereumNetworkConfig';
-import { EvmosEvmNetworkConfig } from '../common/config/evmosEvmNetworkConfig';
-import { FantomNetworkConfig } from '../common/config/fantomNetworkConfig';
-import { HarmonyNetworkConfig } from '../common/config/harmonyNetworkConfig';
-import { MaticNetworkConfig } from '../common/config/maticNetworkConfig';
-import { MumbaiNetworkConfig } from '../common/config/mumbaiNetworkConfig';
-import { NetworkConfig } from '../common/config/networkConfig';
-import { OptimismNetworkConfig } from '../common/config/optimismNetworkConfig';
-import { XdaiNetworkConfig } from '../common/config/xdaiNetworkConfig';
-import { ExchangePrice } from '../common/exchangePrice';
-import { TokenMetadataOracle } from './tokenMetadataOracle';
-import { CHAINID } from '../../constants';
 import { ApAxiosManager, CacheDuration } from '../../axios';
+import { AbstractLoggingContext } from '../../blueprint/common';
+import { NetworkConfig } from '../../blueprint/common/config/networkConfig';
+import { TokenMetadataOracle } from '../../blueprint/common/token/tokenMetadataOracle';
+import { MetadataStore } from '../../blueprint/meta';
+import { BlockByDateAPIInterface } from '../../blueprint/models/blockbydateAPIInterface';
+import { Blueprint } from '../../blueprint/models/blueprintInterface';
+import { DefiPriceAPIInterface } from '../../blueprint/models/defiPriceAPIInterface';
+import { ExchangePrice } from '../../blueprint/models/exchangePrice';
+import { ExternalResponseCacheService } from '../../cache';
+import { AXIOS_DEFAULT_CONFIG, CHAINID } from '../../constants';
+import { KafkaManager } from '../../logging';
+import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
-import { config } from 'dotenv';
 import { Logger } from 'log4js';
-import { SolanaNetworkConfig } from '../common/config/solanaNetworkConfig';
 
-export class BlueprintContext {
-  private exchangePrice: ExchangePrice;
-  private readonly networkConfig: NetworkConfig;
-  private readonly blockByDateApi: BlockbydateAPI;
-  private axiosManager: ApAxiosManager;
-  // private readonly kafkaManager: KafkaManager;
-  // private readonly cache: VisionCache;
-  // private readonly configService: ConfigService;
-  // private contractReader: EvmContractReader | SolanaContractReader | EvmosCosmosContractReader | AuroraContractReader;
-  private includeChildrenBPs: boolean | null;
-  private walletAddresses: string[];
-  private initialized: boolean = false;
+export abstract class BlueprintContext {
+  protected contractReader: any;
+
+  networkConfig: NetworkConfig;
+  protected exchangePrice: ExchangePrice;
+  protected blockByDateApi: BlockByDateAPIInterface;
+  protected defiPriceApi: DefiPriceAPIInterface;
+  protected axiosManager: ApAxiosManager;
+  protected readonly kafkaManager: KafkaManager;
+  protected readonly cache: ExternalResponseCacheService;
+  includeChildrenBPs: boolean | null;
+  protected walletAddresses: string[];
+  protected initialized: boolean = false;
+  protected metadataStore: MetadataStore;
+  protected childrenBPs: Blueprint[] = [];
 
   public constructor(
-    private blueprintKey: string,
+    protected blueprintKey: string,
     protected networkId: number | string,
-    private loggingContext: AbstractLoggingContext,
+    protected loggingContext: AbstractLoggingContext,
+    metadataStore: MetadataStore,
+    defiPriceApi?: DefiPriceAPIInterface,
+    blockByDateApi?: BlockByDateAPIInterface,
   ) {
-    this.networkConfig = this.setNetworkConfig(networkId);
-    // this.configService = loggingContext.getConfigService();
-    // this.cache = loggingContext.getCache();
-    this.blockByDateApi = new BlockbydateAPI(this);
-    // this.kafkaManager = KafkaManager.getInstance();
+    this.cache = loggingContext.getCache();
+    this.kafkaManager = KafkaManager.getInstance();
+    this.metadataStore = metadataStore;
+    this.defiPriceApi = defiPriceApi;
+    this.blockByDateApi = blockByDateApi;
   }
 
-  public static buildWithBlueprintId(
-    // blueprintKey: BlueprintKey | string,
-    blueprintKey: string,
-    networkId: number | string,
-    loggingContext: AbstractLoggingContext,
-  ): BlueprintContext {
-    return new BlueprintContext(blueprintKey, networkId, loggingContext);
+  public setBlockByDateApi(blockByDateApi: BlockByDateAPIInterface) {
+    this.blockByDateApi = blockByDateApi;
   }
 
-  public getBlockByDateApi(): BlockbydateAPI {
+  public getBlockByDateApi(): BlockByDateAPIInterface {
     return this.blockByDateApi;
   }
 
@@ -67,7 +58,22 @@ export class BlueprintContext {
     return logger;
   }
 
+  public getDefiPriceAPI(): DefiPriceAPIInterface {
+    return this.defiPriceApi;
+  }
+
+  public setDefiPriceAPI(defiPriceApi: DefiPriceAPIInterface) {
+    this.defiPriceApi = defiPriceApi;
+  }
+
+  private checkNetworkConfig(): void {
+    if (!this.networkConfig) {
+      throw new Error('Network config is not set');
+    }
+  }
+
   public getNetwork(): number {
+    this.checkNetworkConfig();
     return this.networkConfig.getNetwork();
   }
 
@@ -75,52 +81,17 @@ export class BlueprintContext {
     return this.networkConfig;
   }
 
-  private setNetworkConfig(networkId): NetworkConfig {
-    switch (String(networkId)) {
-      case CHAINID.ETHEREUM:
-        return new EthereumNetworkConfig();
-      case CHAINID.MATIC:
-        return new MaticNetworkConfig();
-      case CHAINID.FANTOM:
-        return new FantomNetworkConfig();
-      case CHAINID.BSC:
-        return new BscNetworkConfig();
-      case CHAINID.CELO:
-        return new CeloNetworkConfig();
-      case CHAINID.AVAX:
-        return new AvaxNetworkConfig();
-      case CHAINID.XDAI:
-        return new XdaiNetworkConfig();
-      case CHAINID.ARBITRUM:
-        return new ArbitrumNetworkConfig();
-      case CHAINID.HARMONY:
-        return new HarmonyNetworkConfig();
-      case CHAINID.OPTIMISM:
-        return new OptimismNetworkConfig();
-      case CHAINID.MUMBAI:
-        return new MumbaiNetworkConfig();
-      case CHAINID.SOLANA:
-        return new SolanaNetworkConfig();
-      case CHAINID.AURORA:
-        return new AuroraNetworkConfig();
-      case CHAINID.EVMOS:
-        return new EvmosEvmNetworkConfig();
-      // case CHAINID.EVMOS_COSMOS:
-      //   return new EvmosCosmosNetworkConfig();
-      case CHAINID.BASE:
-        return new BaseNetworkConfig();
-      default:
-        throw 'Unable to determine network config -- please check!!!';
-    }
+  public getBlueprintKey(): string {
+    return this.blueprintKey;
   }
 
-  // public async getAxiosManager(): Promise<ApAxiosManager> {
-  //   if (!this.axiosManager) {
-  //     await this.initAxiosManager();
-  //   }
-  //   return this.axiosManager;
+  public getChildrenBlueprints(): Blueprint[] {
+    return this.includeChildrenBPs ? this.childrenBPs : [];
+  }
 
-  // }
+  public getWalletAddresses(): string[] {
+    return this.walletAddresses || [];
+  }
 
   public getExchangePrice() {
     if (this.exchangePrice == null) {
@@ -133,103 +104,59 @@ export class BlueprintContext {
     return `${prefix}_${composedKey}_${this.getNetwork()}`;
   }
 
+  public async cacheOrPerform(cacheKey, ttl, onCacheMiss) {
+    return this.cache.cacheOrPerform(this.getNetwork().toString(), cacheKey, ttl, onCacheMiss);
+  }
+
+  /**
+   * Gets the raw cache, bypassing the prefix keys we add for context aware
+   */
+  public getRestClient(): AsyncRedis {
+    return this.cache.getRestClient();
+  }
+
   public getGasOracle() {
+    this.checkNetworkConfig();
     return this.networkConfig.getGasOracle(this);
   }
 
   public getTokenMetadataOracle(): TokenMetadataOracle {
+    this.checkNetworkConfig();
     return this.networkConfig.getTokenMetadataOracle(this);
+  }
+
+  public getBlockTimeOracle() {
+    this.checkNetworkConfig();
+    return this.networkConfig.getBlockTimeOracle(this);
+  }
+
+  public getAxios(cacheDuration = CacheDuration.NO_CACHE): AxiosInstance {
+    const axiosManager = this.getAxiosManager();
+    const axios = axiosManager.cacheToAxiosInstance.get(cacheDuration);
+    // add the request header here for any downstream services
+    axios.defaults.headers.common['X-Request-ID'] = this.loggingContext.requestId;
+    axios.defaults.maxRedirects = 0; // Set to 0 to prevent automatic redirects
+    // we call this.getLogger() to set requestId to kafka extras log
+    this.getLogger();
+    return axios;
+  }
+
+  public getAxiosManager() {
+    if (!this.axiosManager) {
+      this.initAxiosManager();
+    }
+
+    this.axiosManager.setRequestId(this.getRequestId());
+    return this.axiosManager;
   }
 
   public getRequestId(): string {
     return this.loggingContext.requestId;
   }
 
-  // public getMetadataStore(): MetadataStore {
-  //   const blueprintMetadataRepo: Repository<BlueprintMetadata> = DataSource.getRepository(BlueprintMetadata);
-  //   const metaStore = new MetadataStore(blueprintMetadataRepo, this.loggingContext);
-  //   return metaStore;
-  // }
-
-  // public getBlockTimeOracle() {
-  //   return this.networkConfig.getBlockTimeOracle(this);
-  // }
-
-  // public getComposedBlueprintKey(): string | null {
-  //   return this.includeChildrenBPs
-  //     ? new ComposedBlueprintKeyGenerator(this.blueprintKey, this.loggingContext).getComposedKey()
-  //     : null;
-  // }
-
-  // public getChildrenBlueprints(): Blueprint[] {
-  //   return this.includeChildrenBPs
-  //     ? new BlueprintRegistry(this.loggingContext).getChildrenBlueprintFromParent(this.blueprintKey)
-  //     : [];
-  // }
-
-  public getWalletAddresses(): string[] {
-    return this.walletAddresses || [];
+  public getMetadataStore(): MetadataStore {
+    return this.metadataStore;
   }
-
-  //  getAxiosManager();
-
-  // abstract cacheOrPerform(cacheKey, ttl, onCacheMiss);
-
-  /**
-   * Gets the contract reader.
-   */
-  // abstract getContractReader(): any;
-
-  // abstract getCommonAPI(): any;
-
-  // abstract getRawRedis(): AsyncRedis; // we comment this out to not worry about Redis types for the moment
-
-  // abstract getVisionCache(): any;
-
-  //  async getAxios(cacheDuration = CacheDuration.SHORT_CACHE_DURATION): Promise<AxiosInstance> {
-  //   const axiosManager = await this.getAxiosManager();
-  //   const axios = axiosManager.cacheToAxiosInstance.get(cacheDuration);
-  //   // add the request header here for any downstream services
-  //   axios.defaults.headers.common['X-Request-ID'] = this.loggingContext.requestId;
-  //   axios.defaults.maxRedirects = 0; // Set to 0 to prevent automatic redirects
-  //   return axios;
-  // }
-
-  // public async getAxiosManager() {
-  //   if (!this.axiosManager) {
-  //     await this.initAxiosManager();
-  //   }
-  //   return this.axiosManager;
-  // }
-
-  // private async initAxiosManager() {
-  //   if (!this.axiosManager) {
-  //     this.axiosManager = new ApAxiosManager(
-  //       this.blueprintKey,
-  //       this.getRestClient(),
-  //       this.kafkaManager,
-  //       this.loggingContext.requestId,
-  //     );
-  //   }
-  //   await this.axiosManager.setup(AXIOS_DEFAULT_CONFIG);
-  // }
-
-  // private getContractReaderByNetwork(network: number | string) {
-  //   switch (network) {
-  //     case CHAINID.SOLANA:
-  //       return new SolanaContractReader(this);
-  //     case CHAINID.EVMOS_COSMOS:
-  //       return new EvmosCosmosContractReader(
-  //         BlueprintContext.buildWithBlueprintId(BlueprintKey.EVMOS_STAKING, CHAINID.EVMOS_COSMOS, this.loggingContext),
-  //       );
-  //     case CHAINID.AURORA:
-  //       return new AuroraContractReader(
-  //         BlueprintContext.buildWithBlueprintId(BlueprintKey.TRISOLARIS_AURORA, CHAINID.AURORA, this.loggingContext),
-  //       );
-  //     default:
-  //       return new EvmContractReader(this);
-  //   }
-  // }
 
   public initialize(wallets: string[], includeChildrenBlueprints = false): void {
     if (this.isInitialized()) {
@@ -244,12 +171,33 @@ export class BlueprintContext {
     return this.initialized;
   }
 
-  private setIncludeChildrenBlueprints(includeChildrenBlueprints: boolean): void {
-    this.includeChildrenBPs = includeChildrenBlueprints;
-  }
-
   private setWalletAddresses(wallets: string[]): void {
     this.walletAddresses =
       this.getNetwork() == Number(CHAINID.SOLANA) ? wallets : wallets.map((wallet) => wallet.toLowerCase());
   }
+
+  private setIncludeChildrenBlueprints(includeChildrenBlueprints: boolean): void {
+    this.includeChildrenBPs = includeChildrenBlueprints;
+  }
+
+  private initAxiosManager() {
+    if (!this.axiosManager) {
+      this.axiosManager = new ApAxiosManager(
+        this.blueprintKey,
+        this.kafkaManager as any,
+        this.loggingContext.requestId,
+      );
+    }
+    this.axiosManager.setup(AXIOS_DEFAULT_CONFIG);
+  }
+
+  setChildrenBlueprints(childrenBlueprints: Blueprint[]) {
+    this.childrenBPs = childrenBlueprints;
+  }
+
+  abstract setNetworkConfig(networkId): NetworkConfig;
+  abstract getComposedBlueprintKey(): string | null;
+  abstract getContractReaderByNetwork(network: number | string);
+  abstract getContractReader();
+  abstract getConfigService();
 }

@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolanaNetworkConfig = void 0;
-const nullOpBlockTimeOracle_1 = require("../blocktime/nullOpBlockTimeOracle");
-const nullOpGasOracle_1 = require("../gas/nullOpGasOracle");
+const evmGasOracle_1 = require("../../../blueprint/common/gas/evmGasOracle");
 const constants_1 = require("../../../constants");
-const solanaTokenMetadataOracle_1 = require("../token/solanaTokenMetadataOracle");
+const nullOpBlockTimeOracle_1 = require("../blocktime/nullOpBlockTimeOracle");
 class SolanaNetworkConfig {
     getInitStartBlock() {
         // https://solscan.io/block/1
@@ -19,18 +18,16 @@ class SolanaNetworkConfig {
     isContractNameLookupEnabled() {
         return true;
     }
-    getGasOracle(context) {
-        // TODO implement this for Solana
-        return new nullOpGasOracle_1.NullOpGasOracle();
-    }
-    getTokenMetadataOracle(context) {
-        if (!this.tokenMetadataOracle) {
-            this.tokenMetadataOracle = new solanaTokenMetadataOracle_1.SolanaTokenMetadataOracle(context);
-        }
-        return this.tokenMetadataOracle;
-    }
-    getBlockTimeOracle(context) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getBlockTimeOracle(_context) {
         return new nullOpBlockTimeOracle_1.NullOpBlockTimeOracle();
+    }
+    getGasOracle(context) {
+        if (!this.gasOracle) {
+            // logic is the same as EVM (gasUsed * gasTokenPrice)
+            this.gasOracle = new evmGasOracle_1.EvmGasOracle(context);
+        }
+        return this.gasOracle;
     }
 }
 exports.SolanaNetworkConfig = SolanaNetworkConfig;
