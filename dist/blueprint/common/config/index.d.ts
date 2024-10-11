@@ -18,3 +18,5 @@ export * from './optimismNetworkConfig';
 export * from './roninNetworkConfig';
 export * from './solanaNetworkConfig';
 export * from './xdaiNetworkConfig';
+export * from './scrollNetworkConfig';
+export * from './zkSyncNetworkConfig';

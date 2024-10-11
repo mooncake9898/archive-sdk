@@ -34,4 +34,6 @@ __exportStar(require("./optimismNetworkConfig"), exports);
 __exportStar(require("./roninNetworkConfig"), exports);
 __exportStar(require("./solanaNetworkConfig"), exports);
 __exportStar(require("./xdaiNetworkConfig"), exports);
+__exportStar(require("./scrollNetworkConfig"), exports);
+__exportStar(require("./zkSyncNetworkConfig"), exports);
 //# sourceMappingURL=index.js.map
