@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PADDED_ZERO_ADDRS = exports.ETH_ADDRESS_MAINNET = exports.BTC_ADDRESS_MAINNET = exports.ETHER_GAS_TOKEN_DECIMALS = exports.ETHER_GAS_TOKEN_SYMBOL = exports.ETHER_GAS_TOKEN_IDENTIFIER = exports.STACKTRACE_KEY = exports.TokenTag = exports.OperationType = void 0;
+exports.PADDED_ZERO_ADDRS = exports.ETH_ADDRESS_MAINNET = exports.BTC_ADDRESS_MAINNET = exports.ETHER_GAS_TOKEN_DECIMALS = exports.ETHER_GAS_TOKEN_SYMBOL = exports.ETHER_GAS_TOKEN_IDENTIFIER = exports.TokenTag = exports.OperationType = void 0;
 var OperationType;
 (function (OperationType) {
     OperationType["DEPOSIT"] = "deposit";
@@ -17,7 +17,6 @@ var TokenTag;
     TokenTag["REWARDS"] = "rewards";
     TokenTag["TRACKED_UNDERLYING"] = "tracked_underlying";
 })(TokenTag || (exports.TokenTag = TokenTag = {}));
-exports.STACKTRACE_KEY = 'stacktrace';
 exports.ETHER_GAS_TOKEN_IDENTIFIER = 'Eth';
 exports.ETHER_GAS_TOKEN_SYMBOL = 'ETH';
 exports.ETHER_GAS_TOKEN_DECIMALS = 18;
