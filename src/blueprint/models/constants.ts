@@ -14,8 +14,6 @@ export enum TokenTag {
   TRACKED_UNDERLYING = 'tracked_underlying',
 }
 
-export const STACKTRACE_KEY = 'stacktrace';
-
 export const ETHER_GAS_TOKEN_IDENTIFIER = 'Eth';
 export const ETHER_GAS_TOKEN_SYMBOL = 'ETH';
 export const ETHER_GAS_TOKEN_DECIMALS = 18;
