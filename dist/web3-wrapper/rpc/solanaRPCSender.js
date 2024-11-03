@@ -18,35 +18,33 @@ const web3_js_1 = require("@solana/web3.js");
 const https_proxy_agent_1 = require("https-proxy-agent");
 const perf_hooks_1 = require("perf_hooks");
 class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
-    constructor(rpcInfos, networkId, rpcProviderFn, proxyServerUrl, requestId, attemptFallback = true) {
+    constructor(networkId, proxyServerUrl, requestId) {
         super();
         this.networkId = networkId;
-        this.rpcProviderFn = rpcProviderFn;
         this.proxyServerUrl = proxyServerUrl;
         this.requestId = requestId;
-        this.attemptFallback = attemptFallback;
-        this.rpcOracle = new rpcOracle_1.RPCOracle(networkId, rpcInfos);
-        this.maxAttempts = this.attemptFallback ? this.rpcOracle.getRpcCount() : 1;
         this.logger = logger_1.ArchiveLogger.getLogger();
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
     }
-    executeCallOrSend() {
+    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true) {
         return __awaiter(this, void 0, void 0, function* () {
-            for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-                const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+            const rpcOracle = new rpcOracle_1.RPCOracle(this.networkId, rpcInfos);
+            const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                const selectedRpc = rpcOracle.getNextAvailableRpc();
                 if (!selectedRpc) {
                     continue;
                 }
                 try {
                     if (attempt > 0) {
-                        this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`);
+                        this.logger.info(`Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${maxAttempts}`);
                     }
                     const start = perf_hooks_1.performance.now();
                     const connection = selectedRpc.requiresProxy
                         ? this.getProxyConnection(selectedRpc.url)
                         : new web3_js_1.Connection(selectedRpc.url);
-                    const result = yield this.rpcProviderFn(connection);
+                    const result = yield rpcProviderFn(connection);
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
                     kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
@@ -57,7 +55,7 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     this.logger.error(errorMessage);
                 }
             }
-            const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${this.rpcProviderFn.toString()}`;
+            const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
             this.logger.error(errorMessage);
             return null;
         });

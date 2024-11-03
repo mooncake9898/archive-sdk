@@ -14,44 +14,43 @@ interface ExtendedRequestInit extends RequestInit {
 }
 
 export class SolanaRPCSender extends AbstractRPCSender {
-  private rpcOracle: RPCOracle;
-  private maxAttempts: number;
   private logger: Logger;
 
   constructor(
-    rpcInfos: RpcInfo[],
     private networkId: number | string,
-    private rpcProviderFn: (conn: Connection) => Promise<any>,
     private proxyServerUrl: string,
     private requestId?: string,
-    private attemptFallback = true,
   ) {
     super();
-    this.rpcOracle = new RPCOracle(networkId, rpcInfos);
-
-    this.maxAttempts = this.attemptFallback ? this.rpcOracle.getRpcCount() : 1;
 
     this.logger = ArchiveLogger.getLogger();
     if (this.requestId) this.logger.addContext(REQUEST_ID, this.requestId);
   }
 
-  public async executeCallOrSend(): Promise<any> {
-    for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-      const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+  public async executeCallOrSend(
+    rpcInfos: RpcInfo[],
+    rpcProviderFn: (conn: Connection) => Promise<any>,
+    attemptFallback = true,
+  ): Promise<any> {
+    const rpcOracle = new RPCOracle(this.networkId, rpcInfos);
+    const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const selectedRpc = rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {
         continue;
       }
       try {
         if (attempt > 0) {
           this.logger.info(
-            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`,
+            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${maxAttempts}`,
           );
         }
         const start = performance.now();
         const connection = selectedRpc.requiresProxy
           ? this.getProxyConnection(selectedRpc.url)
           : new Connection(selectedRpc.url);
-        const result = await this.rpcProviderFn(connection);
+        const result = await rpcProviderFn(connection);
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
         kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
@@ -64,7 +63,7 @@ export class SolanaRPCSender extends AbstractRPCSender {
 
     const errorMessage = `All RPCs failed for networkId: ${
       this.networkId
-    }, function called: ${this.rpcProviderFn.toString()}`;
+    }, function called: ${rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }
