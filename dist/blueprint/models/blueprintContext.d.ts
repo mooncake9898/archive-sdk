@@ -9,6 +9,7 @@ import { DefiPriceAPIInterface } from '../../blueprint/models/defiPriceAPIInterf
 import { ExchangePrice } from '../../blueprint/models/exchangePrice';
 import { ExternalResponseCacheService } from '../../cache';
 import { KafkaManager } from '../../logging';
+import { EvmRPCSender } from '@src/web3-wrapper/rpc/evmRPCSender';
 import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
 import { Logger } from 'log4js';
@@ -30,6 +31,7 @@ export declare abstract class BlueprintContext {
   protected initialized: boolean;
   protected metadataStore: MetadataStore;
   protected childrenBPs: Blueprint[];
+  protected evmRpcSender: EvmRPCSender;
   constructor(
     blueprintKey: string,
     networkId: number | string,
@@ -74,4 +76,5 @@ export declare abstract class BlueprintContext {
   abstract getContractReaderByNetwork(network: number | string): any;
   abstract getContractReader(): any;
   abstract getConfigService(): any;
+  abstract getEvmRpcSender(): EvmRPCSender;
 }
