@@ -13,36 +13,35 @@ import { Logger } from 'log4js';
 import { performance } from 'perf_hooks';
 
 export class EvmRPCSender extends AbstractRPCSender {
-  private rpcOracle: RPCOracle;
-  private maxAttempts: number;
   private logger: Logger;
   private timeoutMilliseconds = 10000;
 
   constructor(
-    rpcInfos: RpcInfo[],
     private networkId: number | string,
     private networkName: string,
-    private rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
-    private proxyServerUrl?: string,
-    private requestId?: string,
-    private attemptFallback = true,
+
+    private proxyServerUrl: string,
+    private requestId: string,
   ) {
     super();
-    this.rpcOracle = new RPCOracle(networkId, rpcInfos);
-
-    this.maxAttempts = this.attemptFallback ? this.rpcOracle.getRpcCount() : 1;
-
     this.logger = ArchiveLogger.getLogger();
     if (this.requestId) this.logger.addContext(REQUEST_ID, this.requestId);
   }
 
-  public async executeCallOrSend(): Promise<any> {
-    if (!this.rpcProviderFn) {
+  public async executeCallOrSend(
+    rpcInfos: RpcInfo[],
+    rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
+    attemptFallback = true,
+  ): Promise<any> {
+    const rpcOracle = new RPCOracle(this.networkId, rpcInfos);
+    const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
+
+    if (!rpcProviderFn) {
       throw new Error('RPC Provider function is not defined');
     }
 
-    for (let attempt = 0; attempt < this.maxAttempts; attempt++) {
-      const selectedRpc = this.rpcOracle.getNextAvailableRpc();
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const selectedRpc = rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {
         continue;
       }
@@ -50,11 +49,11 @@ export class EvmRPCSender extends AbstractRPCSender {
       try {
         if (attempt > 0) {
           this.logger.info(
-            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${this.maxAttempts}`,
+            `Retrying the RPC call with, ${selectedRpc.url}, attempt: ${attempt} out of: ${maxAttempts}`,
           );
         }
         const start = performance.now();
-        const result = await this.rpcProviderFn(this.getProviderForCall(selectedRpc));
+        const result = await rpcProviderFn(this.getProviderForCall(selectedRpc));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
         kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
@@ -66,7 +65,7 @@ export class EvmRPCSender extends AbstractRPCSender {
         kafkaManager?.sendRpcFailureToKafka(
           selectedRpc.url,
           String(this.networkId),
-          this.rpcProviderFn,
+          rpcProviderFn,
           error.message,
           this.requestId,
         );
@@ -76,7 +75,7 @@ export class EvmRPCSender extends AbstractRPCSender {
 
     const errorMessage = `All RPCs failed for networkId: ${
       this.networkId
-    }, function called: ${this.rpcProviderFn.toString()}`;
+    }, function called: ${rpcProviderFn.toString()}`;
     this.logger.error(errorMessage);
     return null;
   }
@@ -85,11 +84,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     return networkId === CHAINID.OPTIMISM || networkId === CHAINID.BASE;
   }
 
-  public getProviderForCall(selectedRpc?: RpcInfo): ArchiveJsonRpcProvider {
-    if (!selectedRpc) {
-      selectedRpc = this.rpcOracle.getNextAvailableRpc();
-    }
-
+  public getProviderForCall(selectedRpc: RpcInfo): ArchiveJsonRpcProvider {
     if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
       return asL2Provider(
         new ethers.providers.StaticJsonRpcProvider({
