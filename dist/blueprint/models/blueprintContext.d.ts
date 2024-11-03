@@ -9,8 +9,8 @@ import { DefiPriceAPIInterface } from '../../blueprint/models/defiPriceAPIInterf
 import { ExchangePrice } from '../../blueprint/models/exchangePrice';
 import { ExternalResponseCacheService } from '../../cache';
 import { KafkaManager } from '../../logging';
-import { SolanaRPCSender } from '@src/web3-wrapper';
 import { EvmRPCSender } from '@src/web3-wrapper/rpc/evmRPCSender';
+import { SolanaRPCSender } from '@src/web3-wrapper/rpc/solanaRPCSender';
 import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
 import { Logger } from 'log4js';
