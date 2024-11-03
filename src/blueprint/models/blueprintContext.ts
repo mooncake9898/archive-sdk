@@ -10,6 +10,7 @@ import { ExchangePrice } from '../../blueprint/models/exchangePrice';
 import { ExternalResponseCacheService } from '../../cache';
 import { AXIOS_DEFAULT_CONFIG, CHAINID } from '../../constants';
 import { KafkaManager } from '../../logging';
+import { EvmRPCSender } from '@src/web3-wrapper/rpc/evmRPCSender';
 import AsyncRedis from 'async-redis';
 import { AxiosInstance } from 'axios';
 import { Logger } from 'log4js';
@@ -29,6 +30,7 @@ export abstract class BlueprintContext {
   protected initialized: boolean = false;
   protected metadataStore: MetadataStore;
   protected childrenBPs: Blueprint[] = [];
+  protected evmRpcSender: EvmRPCSender;
 
   public constructor(
     protected blueprintKey: string,
@@ -200,4 +202,5 @@ export abstract class BlueprintContext {
   abstract getContractReaderByNetwork(network: number | string);
   abstract getContractReader();
   abstract getConfigService();
+  abstract getEvmRpcSender(): EvmRPCSender;
 }
