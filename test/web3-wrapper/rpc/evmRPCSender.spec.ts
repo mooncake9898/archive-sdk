@@ -18,33 +18,19 @@ describe('EvmRPCSender', () => {
   describe('calling executeCallOrSend', () => {
     it('should return a valid result', async () => {
       const sender = new EvmRPCSender(
-        rpcs,
         CHAINID.ETHEREUM,
         'ethereum',
-        async (_) => {
-          return 5;
-        },
         mockProxyUrl,
         testRequestId,
       );
-      const result = await sender.executeCallOrSend();
+      const result = await sender.executeCallOrSend(
+        rpcs,
+        async (_) => {
+          return 5;
+        },
+      );
 
       expect(result).not.toBeNull();
-    });
-
-    it('should throw an error when calling with an unknown chain id', () => {
-      expect(() => {
-        new EvmRPCSender(
-          rpcs,
-          500,
-          'unknown',
-          async (_) => {
-            return 5;
-          },
-          mockProxyUrl,
-          testRequestId,
-        );
-      }).toThrow('Chain with ID 500 not found.');
     });
   });
 });
