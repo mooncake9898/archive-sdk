@@ -19,8 +19,9 @@ export declare class KafkaManager {
     get producer(): Producer;
     get consumer(): Consumer;
     sendResponseTimeToKafka(config: MyRequestConfig, status: number, blueprintId: string, requestId?: string, responseTimesTopic?: Queues): Promise<void>;
+    private getHostName;
     sendRpcResponseTimeToKafka(rpcUrl: string, requestDuration: number, requestId?: string, responseTimesTopic?: Queues): Promise<void>;
-    sendRpcFailureToKafka(rpcEndpoint: string, networkId: string, rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>, errorMessage: string, requestId?: string): Promise<void>;
+    sendRpcFailureToKafka(rpcEndpoint: string, networkId: string, rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>, error: any, requestId?: string): Promise<void>;
     private stringifyQueues;
     sendLogs(msgs: LogQueue[], topic?: Queues): Promise<void>;
     sendMessage(topic: string, messages: Message[]): Promise<void>;
