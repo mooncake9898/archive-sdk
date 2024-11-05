@@ -78,14 +78,17 @@ class KafkaManager {
                 return;
             const timestamp = Math.floor(new Date().getTime());
             const requestDuration = config.metadata.duration;
+            const hostName = this.getHostName(config.url);
             const responseTime = {
                 url: config.url,
+                hostName: hostName,
                 blueprintId: blueprintId,
                 // TODO  i can only presume indexerId was supposed to be a unique identifier for each AP producer instance
                 indexerId: 'INDEXER-ID',
                 responseStatusCode: status,
                 responseTimeMs: requestDuration,
                 timestamp: timestamp,
+                requestId: requestId,
                 extras: {
                     requestId: requestId,
                     nodeEnv: process.env.NODE_ENV,
@@ -94,20 +97,33 @@ class KafkaManager {
             const responseTimeQueuesAsJson = this.stringifyQueues([responseTime]);
             this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
         });
+    }
+    getHostName(url) {
+        try {
+            const parsedUrl = new URL(url);
+            return parsedUrl.hostname;
+        }
+        catch (error) {
+            console.error("Invalid URL:", error);
+            return "";
+        }
     }
     sendRpcResponseTimeToKafka(rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
             const timestamp = Math.floor(new Date().getTime());
+            const hostName = this.getHostName(rpcUrl);
             const responseTime = {
                 url: rpcUrl,
+                hostName: hostName,
                 blueprintId: 'defaultBlueprintId',
                 // TODO  i can only presume indexerId was supposed to be a unique identifier for each AP producer instance
                 indexerId: 'INDEXER-ID',
                 responseStatusCode: -1,
                 responseTimeMs: Math.trunc(requestDuration),
                 timestamp: timestamp,
+                requestId: requestId,
                 extras: {
                     requestId: requestId,
                     nodeEnv: process.env.NODE_ENV,
@@ -117,17 +133,19 @@ class KafkaManager {
             this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
         });
     }
-    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, errorMessage, requestId) {
+    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, error, requestId) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
             const timestamp = Math.floor(new Date().getTime());
-            rpcProviderFn.toString();
+            const errorCode = error.code || ((_a = error.error) === null || _a === void 0 ? void 0 : _a.code) || 0;
             const rpcFailure = {
                 rpcEndpoint,
                 networkId,
                 calledFunction: rpcProviderFn.toString(),
-                errorMessage,
+                errorMessage: error.message,
+                errorCode,
                 timestamp,
                 extras: {
                     requestId: requestId,

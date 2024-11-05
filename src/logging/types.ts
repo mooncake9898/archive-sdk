@@ -25,6 +25,7 @@ export interface SampleQueue extends BaseQueue {
 
 export interface ResponseTimeQueue extends BaseQueue {
   url: string;
+  hostName: string;
   indexerId: string;
   responseTimeMs: number;
   responseStatusCode: number;
@@ -35,6 +36,8 @@ export interface RpcFailureQueue extends BaseQueue {
   networkId: string;
   calledFunction: string;
   errorMessage: string;
+  errorCode: number;
+
 }
 export interface ExternalAPICallQueue extends BaseQueue, BlueprintSessionQueue {
   url: string;

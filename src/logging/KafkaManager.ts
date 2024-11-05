@@ -83,15 +83,18 @@ export class KafkaManager {
 
     const timestamp = Math.floor(new Date().getTime());
     const requestDuration = config.metadata.duration;
+    const hostName = this.getHostName(config.url);
 
     const responseTime = {
       url: config.url,
+      hostName: hostName,
       blueprintId: blueprintId,
       // TODO  i can only presume indexerId was supposed to be a unique identifier for each AP producer instance
       indexerId: 'INDEXER-ID',
       responseStatusCode: status,
       responseTimeMs: requestDuration,
       timestamp: timestamp,
+      requestId: requestId,
       extras: {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
@@ -102,6 +105,16 @@ export class KafkaManager {
     this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
   }
 
+  private getHostName(url: string): string {
+    try {
+      const parsedUrl = new URL(url);
+      return parsedUrl.hostname;
+    } catch (error) {
+      console.error("Invalid URL:", error);
+      return "";
+    }
+  }
+
   async sendRpcResponseTimeToKafka(
     rpcUrl: string,
     requestDuration: number,
@@ -110,15 +123,18 @@ export class KafkaManager {
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
     const timestamp = Math.floor(new Date().getTime());
+    const hostName = this.getHostName(rpcUrl);
 
     const responseTime = {
       url: rpcUrl,
+      hostName: hostName,
       blueprintId: 'defaultBlueprintId',
       // TODO  i can only presume indexerId was supposed to be a unique identifier for each AP producer instance
       indexerId: 'INDEXER-ID',
       responseStatusCode: -1,
       responseTimeMs: Math.trunc(requestDuration),
       timestamp: timestamp,
+      requestId: requestId,
       extras: {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
@@ -134,18 +150,19 @@ export class KafkaManager {
     rpcEndpoint: string,
     networkId: string,
     rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
-    errorMessage: string,
+    error: any,
     requestId?: string,
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
     const timestamp = Math.floor(new Date().getTime());
-    rpcProviderFn.toString();
+    const errorCode = error.code ||  error.error?.code || 0;
 
     const rpcFailure = {
       rpcEndpoint,
       networkId,
       calledFunction: rpcProviderFn.toString(),
-      errorMessage,
+      errorMessage: error.message,
+      errorCode,
       timestamp,
       extras: {
         requestId: requestId,
