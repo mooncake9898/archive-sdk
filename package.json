@@ -1,6 +1,6 @@
 {
   "name": "archive-sdk",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,6 @@
   "devDependencies": {
     "@fluffy-spoon/substitute": "1.208.0",
     "@golevelup/ts-jest": "0.4.0",
-    "@nestjs/typeorm": "10.0.2",
     "@parcel/core": "2.10.1",
     "@parcel/packager-ts": "2.10.1",
     "@parcel/transformer-typescript-types": "2.10.1",
@@ -58,6 +57,7 @@
   "dependencies": {
     "@eth-optimism/sdk": "^3.1.8",
     "@nestjs/common": "^10.3.9",
+    "@nestjs/typeorm": "10.0.2",
     "@solana/web3.js": "^1.73.3",
     "async-redis": "1.1.7",
     "axios": "1.7.7",
