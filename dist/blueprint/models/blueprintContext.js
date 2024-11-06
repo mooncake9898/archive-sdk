@@ -101,6 +101,7 @@ class BlueprintContext {
         const axios = axiosManager.cacheToAxiosInstance.get(cacheDuration);
         // add the request header here for any downstream services
         axios.defaults.headers.common['X-Request-ID'] = this.loggingContext.requestId;
+        axios.defaults.headers.common['X-Session-ID'] = this.loggingContext.sessionId;
         axios.defaults.maxRedirects = 0; // Set to 0 to prevent automatic redirects
         // we call this.getLogger() to set requestId to kafka extras log
         this.getLogger();

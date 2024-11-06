@@ -20,6 +20,7 @@ export class SolanaRPCSender extends AbstractRPCSender {
     private networkId: number | string,
     private proxyServerUrl: string,
     private requestId?: string,
+    private sessionId?: string,
   ) {
     super();
 
@@ -53,7 +54,7 @@ export class SolanaRPCSender extends AbstractRPCSender {
         const result = await rpcProviderFn(connection);
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
         return result;
       } catch (error) {
         const errorMessage = this.getErrorMessage(error, selectedRpc.url);

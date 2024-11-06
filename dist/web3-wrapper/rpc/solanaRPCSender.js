@@ -18,11 +18,12 @@ const web3_js_1 = require("@solana/web3.js");
 const https_proxy_agent_1 = require("https-proxy-agent");
 const perf_hooks_1 = require("perf_hooks");
 class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
-    constructor(networkId, proxyServerUrl, requestId) {
+    constructor(networkId, proxyServerUrl, requestId, sessionId) {
         super();
         this.networkId = networkId;
         this.proxyServerUrl = proxyServerUrl;
         this.requestId = requestId;
+        this.sessionId = sessionId;
         this.logger = logger_1.ArchiveLogger.getLogger();
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
@@ -47,7 +48,7 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     const result = yield rpcProviderFn(connection);
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
                     return result;
                 }
                 catch (error) {

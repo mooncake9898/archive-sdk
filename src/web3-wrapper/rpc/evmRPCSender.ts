@@ -22,6 +22,7 @@ export class EvmRPCSender extends AbstractRPCSender {
 
     private proxyServerUrl: string,
     private requestId: string,
+    private sessionId?: string,
   ) {
     super();
     this.logger = ArchiveLogger.getLogger();
@@ -56,7 +57,7 @@ export class EvmRPCSender extends AbstractRPCSender {
         const result = await rpcProviderFn(this.getProviderForCall(selectedRpc));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
+        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
 
         return result;
       } catch (error) {
@@ -68,6 +69,7 @@ export class EvmRPCSender extends AbstractRPCSender {
           rpcProviderFn,
           error,
           this.requestId,
+          this.sessionId,
         );
         if (!this.shouldRetry(error)) break;
       }

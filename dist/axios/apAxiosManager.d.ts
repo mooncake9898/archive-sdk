@@ -18,11 +18,13 @@ export declare class ApAxiosManager {
   private blueprintId;
   private kafkaManager;
   private requestId?;
+  private sessionId?;
   cacheToAxiosInstance: Map<CacheDuration, AxiosInstance>;
   private config?;
-  constructor(blueprintId: string, kafkaManager: KafkaManager, requestId?: string);
+  constructor(blueprintId: string, kafkaManager: KafkaManager, requestId?: string, sessionId?: string);
   setup(config?: CreateAxiosDefaults): void;
   setRequestId(requestId: string): void;
+  setSessionId(sessionId: string): void;
   private setupNoCacheDurationInstance;
   private setupShortCacheDurationAxiosInstance;
   private requestInterceptorOnFulfilled;

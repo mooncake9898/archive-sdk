@@ -72,7 +72,7 @@ class KafkaManager {
     get consumer() {
         return this._consumer;
     }
-    sendResponseTimeToKafka(config, status, blueprintId, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES) {
+    sendResponseTimeToKafka(config, status, blueprintId, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
@@ -92,6 +92,7 @@ class KafkaManager {
                 extras: {
                     requestId: requestId,
                     nodeEnv: process.env.NODE_ENV,
+                    sessionId,
                 },
             };
             const responseTimeQueuesAsJson = this.stringifyQueues([responseTime]);
@@ -108,7 +109,7 @@ class KafkaManager {
             return "";
         }
     }
-    sendRpcResponseTimeToKafka(rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES) {
+    sendRpcResponseTimeToKafka(rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
@@ -127,13 +128,14 @@ class KafkaManager {
                 extras: {
                     requestId: requestId,
                     nodeEnv: process.env.NODE_ENV,
+                    sessionId,
                 },
             };
             const responseTimeQueuesAsJson = this.stringifyQueues([responseTime]);
             this.sendMessage(responseTimesTopic, responseTimeQueuesAsJson);
         });
     }
-    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, error, requestId) {
+    sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, error, requestId, sessionId) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
@@ -150,6 +152,7 @@ class KafkaManager {
                 extras: {
                     requestId: requestId,
                     nodeEnv: process.env.NODE_ENV,
+                    sessionId,
                 },
             };
             const rpcCallAsJson = this.stringifyQueues([rpcFailure]);

@@ -23,10 +23,11 @@ var CacheDuration;
 })(CacheDuration || (exports.CacheDuration = CacheDuration = {}));
 // Note that only GET requests are cached.
 class ApAxiosManager {
-    constructor(blueprintId, kafkaManager, requestId) {
+    constructor(blueprintId, kafkaManager, requestId, sessionId) {
         this.blueprintId = blueprintId;
         this.kafkaManager = kafkaManager;
         this.requestId = requestId;
+        this.sessionId = sessionId;
         this.cacheToAxiosInstance = new Map();
     }
     setup(config) {
@@ -36,6 +37,9 @@ class ApAxiosManager {
     }
     setRequestId(requestId) {
         this.requestId = requestId;
+    }
+    setSessionId(sessionId) {
+        this.sessionId = sessionId;
     }
     setupNoCacheDurationInstance() {
         const shortDurationInstance = axios_1.default.create(this.config);
@@ -86,7 +90,10 @@ class ApAxiosManager {
                     message: this.generateAxiosErrorMessage(error),
                     timestamp: Date.now(),
                     blueprintId: this.blueprintId,
-                    extras: { requestId: this.requestId },
+                    extras: {
+                        requestId: this.requestId,
+                        sessionId: this.sessionId,
+                    },
                 },
             ]);
             return Promise.reject(error);
@@ -94,7 +101,7 @@ class ApAxiosManager {
     }
     logResponseTime(config, status) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.kafkaManager.sendResponseTimeToKafka(config, status, this.blueprintId, this.requestId);
+            yield this.kafkaManager.sendResponseTimeToKafka(config, status, this.blueprintId, this.requestId, null, this.sessionId);
         });
     }
     calculateRequestDuration(config) {

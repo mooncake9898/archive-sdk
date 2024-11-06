@@ -78,6 +78,7 @@ export class KafkaManager {
     blueprintId: string,
     requestId?: string,
     responseTimesTopic = Queues.RESPONSE_TIMES,
+    sessionId?: string,
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
 
@@ -98,6 +99,7 @@ export class KafkaManager {
       extras: {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
+        sessionId,
       },
     } as ResponseTimeQueue;
 
@@ -110,8 +112,8 @@ export class KafkaManager {
       const parsedUrl = new URL(url);
       return parsedUrl.hostname;
     } catch (error) {
-      console.error("Invalid URL:", error);
-      return "";
+      console.error('Invalid URL:', error);
+      return '';
     }
   }
 
@@ -120,6 +122,7 @@ export class KafkaManager {
     requestDuration: number,
     requestId?: string,
     responseTimesTopic = Queues.RESPONSE_TIMES,
+    sessionId?: string,
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
     const timestamp = Math.floor(new Date().getTime());
@@ -138,6 +141,7 @@ export class KafkaManager {
       extras: {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
+        sessionId,
       },
     } as ResponseTimeQueue;
 
@@ -152,10 +156,11 @@ export class KafkaManager {
     rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     error: any,
     requestId?: string,
+    sessionId?: string,
   ): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
     const timestamp = Math.floor(new Date().getTime());
-    const errorCode = error.code ||  error.error?.code || 0;
+    const errorCode = error.code || error.error?.code || 0;
 
     const rpcFailure = {
       rpcEndpoint,
@@ -167,6 +172,7 @@ export class KafkaManager {
       extras: {
         requestId: requestId,
         nodeEnv: process.env.NODE_ENV,
+        sessionId,
       },
     } as RpcFailureQueue;
 
