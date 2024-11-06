@@ -24,6 +24,12 @@ let AbstractLoggingContext = class AbstractLoggingContext {
     set requestId(value) {
         this._requestId = value;
     }
+    get sessionId() {
+        return this._sessionId;
+    }
+    set sessionId(value) {
+        this._sessionId = value;
+    }
     getCache() {
         return this.cache;
     }

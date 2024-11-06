@@ -9,6 +9,7 @@ export const REQUEST_ID = 'requestId';
 @Injectable()
 export abstract class AbstractLoggingContext {
   private _requestId: string;
+  private _sessionId: string;
 
   constructor(private readonly cache: ExternalResponseCacheService) {}
 
@@ -18,6 +19,14 @@ export abstract class AbstractLoggingContext {
 
   set requestId(value: string) {
     this._requestId = value;
+  }
+
+  get sessionId(): string {
+    return this._sessionId;
+  }
+
+  set sessionId(value: string) {
+    this._sessionId = value;
   }
 
   getCache() {

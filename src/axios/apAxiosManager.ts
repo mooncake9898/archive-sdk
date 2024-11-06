@@ -28,6 +28,7 @@ export class ApAxiosManager {
     private blueprintId: string,
     private kafkaManager: KafkaManager,
     private requestId?: string,
+    private sessionId?: string,
   ) {
     this.cacheToAxiosInstance = new Map();
   }
@@ -40,6 +41,10 @@ export class ApAxiosManager {
 
   setRequestId(requestId: string): void {
     this.requestId = requestId;
+  }
+
+  setSessionId(sessionId: string): void {
+    this.sessionId = sessionId;
   }
 
   private setupNoCacheDurationInstance() {
@@ -103,14 +108,24 @@ export class ApAxiosManager {
         message: this.generateAxiosErrorMessage(error),
         timestamp: Date.now(),
         blueprintId: this.blueprintId,
-        extras: { requestId: this.requestId },
+        extras: {
+          requestId: this.requestId,
+          sessionId: this.sessionId,
+        },
       },
     ]);
     return Promise.reject(error);
   }
 
   private async logResponseTime(config: MyRequestConfig, status: number) {
-    await this.kafkaManager.sendResponseTimeToKafka(config, status, this.blueprintId, this.requestId);
+    await this.kafkaManager.sendResponseTimeToKafka(
+      config,
+      status,
+      this.blueprintId,
+      this.requestId,
+      null,
+      this.sessionId,
+    );
   }
 
   private calculateRequestDuration(config: MyRequestConfig) {

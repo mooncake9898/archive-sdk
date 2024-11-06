@@ -21,12 +21,13 @@ const ethers_v6_1 = require("ethers-v6");
 const https_proxy_agent_1 = require("https-proxy-agent");
 const perf_hooks_1 = require("perf_hooks");
 class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
-    constructor(networkId, networkName, proxyServerUrl, requestId) {
+    constructor(networkId, networkName, proxyServerUrl, requestId, sessionId) {
         super();
         this.networkId = networkId;
         this.networkName = networkName;
         this.proxyServerUrl = proxyServerUrl;
         this.requestId = requestId;
+        this.sessionId = sessionId;
         this.timeoutMilliseconds = 10000;
         this.logger = logger_1.ArchiveLogger.getLogger();
         if (this.requestId)
@@ -53,13 +54,13 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     const result = yield rpcProviderFn(this.getProviderForCall(selectedRpc));
                     const end = perf_hooks_1.performance.now();
                     const kafkaManager = logging_1.KafkaManager.getInstance();
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
                     return result;
                 }
                 catch (error) {
                     const errorMessage = this.getErrorMessage(error, selectedRpc.url);
                     this.logger.error(errorMessage);
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), rpcProviderFn, error, this.requestId);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), rpcProviderFn, error, this.requestId, this.sessionId);
                     if (!this.shouldRetry(error))
                         break;
                 }
