@@ -1,4 +1,4 @@
-import { KafkaManager } from '../logging';
+import { KafkaManager, Queues } from '../logging';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { InternalAxiosRequestConfig } from 'axios';
 import { buildMemoryStorage, setupCache } from 'axios-cache-interceptor';
@@ -123,7 +123,7 @@ export class ApAxiosManager {
       status,
       this.blueprintId,
       this.requestId,
-      null,
+      Queues.RESPONSE_TIMES,
       this.sessionId,
     );
   }
