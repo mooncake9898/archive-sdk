@@ -1,5 +1,5 @@
 import { CHAINID } from '../../constants';
-import { KafkaManager } from '../../logging';
+import { KafkaManager, Queues } from '../../logging';
 import { RpcInfo } from '../../web3-wrapper/rpc/rpcInfo';
 import { ArchiveLogger, REQUEST_ID } from '../logger';
 import { ArchiveJsonRpcProvider } from '../networkConfigurations';
@@ -57,7 +57,13 @@ export class EvmRPCSender extends AbstractRPCSender {
         const result = await rpcProviderFn(this.getProviderForCall(selectedRpc));
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
+        kafkaManager?.sendRpcResponseTimeToKafka(
+          selectedRpc.url,
+          end - start,
+          this.requestId,
+          Queues.RESPONSE_TIMES,
+          this.sessionId,
+        );
 
         return result;
       } catch (error) {

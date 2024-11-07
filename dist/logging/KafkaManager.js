@@ -105,8 +105,8 @@ class KafkaManager {
             return parsedUrl.hostname;
         }
         catch (error) {
-            console.error("Invalid URL:", error);
-            return "";
+            console.error('Invalid URL:', error);
+            return '';
         }
     }
     sendRpcResponseTimeToKafka(rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {

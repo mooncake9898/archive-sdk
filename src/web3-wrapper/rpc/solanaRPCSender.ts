@@ -1,4 +1,4 @@
-import { KafkaManager } from '../../logging';
+import { KafkaManager, Queues } from '../../logging';
 import { RpcInfo } from '../../web3-wrapper/rpc/rpcInfo';
 import { ArchiveLogger, REQUEST_ID } from '../logger';
 import { AbstractRPCSender } from './abstractRPCSender';
@@ -54,7 +54,13 @@ export class SolanaRPCSender extends AbstractRPCSender {
         const result = await rpcProviderFn(connection);
         const end = performance.now();
         const kafkaManager = KafkaManager.getInstance();
-        kafkaManager?.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, null, this.sessionId);
+        kafkaManager?.sendRpcResponseTimeToKafka(
+          selectedRpc.url,
+          end - start,
+          this.requestId,
+          Queues.RESPONSE_TIMES,
+          this.sessionId,
+        );
         return result;
       } catch (error) {
         const errorMessage = this.getErrorMessage(error, selectedRpc.url);

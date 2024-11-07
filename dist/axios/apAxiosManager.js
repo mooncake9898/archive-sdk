@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApAxiosManager = exports.CacheDuration = void 0;
+const logging_1 = require("../logging");
 const axios_1 = __importDefault(require("axios"));
 const axios_cache_interceptor_1 = require("axios-cache-interceptor");
 const axios_retry_1 = __importDefault(require("axios-retry"));
@@ -101,7 +102,7 @@ class ApAxiosManager {
     }
     logResponseTime(config, status) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.kafkaManager.sendResponseTimeToKafka(config, status, this.blueprintId, this.requestId, null, this.sessionId);
+            yield this.kafkaManager.sendResponseTimeToKafka(config, status, this.blueprintId, this.requestId, logging_1.Queues.RESPONSE_TIMES, this.sessionId);
         });
     }
     calculateRequestDuration(config) {
