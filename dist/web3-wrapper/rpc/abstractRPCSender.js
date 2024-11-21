@@ -12,7 +12,7 @@ class AbstractRPCSender {
     }
     shouldRetry(error) {
         var _a;
-        const retryErrorCodes = ['NETWORK_ERROR', 'SERVER_ERROR', 'TIMEOUT'];
+        const retryErrorCodes = ['NETWORK_ERROR', 'TIMEOUT'];
         return (retryErrorCodes.includes(error.code) ||
             retryErrorCodes.includes((_a = error.error) === null || _a === void 0 ? void 0 : _a.code) ||
             [403, 429].includes(error.status));

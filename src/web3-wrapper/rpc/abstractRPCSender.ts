@@ -8,7 +8,7 @@ export class AbstractRPCSender {
   }
 
   protected shouldRetry(error: any): boolean {
-    const retryErrorCodes = ['NETWORK_ERROR', 'SERVER_ERROR', 'TIMEOUT'];
+    const retryErrorCodes = ['NETWORK_ERROR', 'TIMEOUT'];
     return (
       retryErrorCodes.includes(error.code) ||
       retryErrorCodes.includes(error.error?.code) ||
