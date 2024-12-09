@@ -17,6 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./blueprintRequest"), exports);
 __exportStar(require("./blueprintInterface"), exports);
 __exportStar(require("./blueprintCategory"), exports);
+__exportStar(require("./blockchainPlatform"), exports);
 __exportStar(require("./blueprintContext"), exports);
 __exportStar(require("./classification"), exports);
 __exportStar(require("./constants"), exports);
