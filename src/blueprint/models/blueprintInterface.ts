@@ -14,6 +14,8 @@ export interface Blueprint {
   getParentBlueprintId(): string;
   getContext(): BlueprintContext;
   getBlueprintCategory(): string;
+  isWalletCaseSentitive(): boolean;
+  getBlockchainPlatform(): string;
   getTestWalletAddresses(): string[];
   getUserTransactions(
     context: BlueprintContext,

@@ -1,6 +1,7 @@
 export * from './blueprintRequest';
 export * from './blueprintInterface';
 export * from './blueprintCategory';
+export * from './blockchainPlatform';
 export * from './blueprintContext';
 export * from './classification';
 export * from './constants';

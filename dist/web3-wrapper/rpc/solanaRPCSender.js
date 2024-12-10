@@ -32,6 +32,7 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         return __awaiter(this, void 0, void 0, function* () {
             const rpcOracle = new rpcOracle_1.RPCOracle(this.networkId, rpcInfos);
             const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
+            const kafkaManager = logging_1.KafkaManager.getInstance();
             for (let attempt = 0; attempt < maxAttempts; attempt++) {
                 const selectedRpc = rpcOracle.getNextAvailableRpc();
                 if (!selectedRpc) {
@@ -47,13 +48,13 @@ class SolanaRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                         : new web3_js_1.Connection(selectedRpc.url);
                     const result = yield rpcProviderFn(connection);
                     const end = perf_hooks_1.performance.now();
-                    const kafkaManager = logging_1.KafkaManager.getInstance();
                     kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcResponseTimeToKafka(selectedRpc.url, end - start, this.requestId, logging_1.Queues.RESPONSE_TIMES, this.sessionId);
                     return result;
                 }
                 catch (error) {
                     const errorMessage = this.getErrorMessage(error, selectedRpc.url);
                     this.logger.error(errorMessage);
+                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), rpcProviderFn, error, this.requestId, this.sessionId);
                 }
             }
             const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
