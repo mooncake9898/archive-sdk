@@ -35,12 +35,14 @@ export class SolanaRPCSender extends AbstractRPCSender {
   ): Promise<any> {
     const rpcOracle = new RPCOracle(this.networkId, rpcInfos);
     const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
+    const kafkaManager = KafkaManager.getInstance();
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const selectedRpc = rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {
         continue;
       }
+
       try {
         if (attempt > 0) {
           this.logger.info(
@@ -53,7 +55,6 @@ export class SolanaRPCSender extends AbstractRPCSender {
           : new Connection(selectedRpc.url);
         const result = await rpcProviderFn(connection);
         const end = performance.now();
-        const kafkaManager = KafkaManager.getInstance();
         kafkaManager?.sendRpcResponseTimeToKafka(
           selectedRpc.url,
           end - start,
@@ -65,6 +66,14 @@ export class SolanaRPCSender extends AbstractRPCSender {
       } catch (error) {
         const errorMessage = this.getErrorMessage(error, selectedRpc.url);
         this.logger.error(errorMessage);
+        kafkaManager?.sendRpcFailureToKafka(
+          selectedRpc.url,
+          String(this.networkId),
+          rpcProviderFn,
+          error,
+          this.requestId,
+          this.sessionId,
+        );
       }
     }
 

@@ -3,6 +3,7 @@ import { MyRequestConfig } from './config/axios.config';
 import { defaultKafkaConfig } from './kafkaConfig';
 import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailureQueue } from './types';
 import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
+import { Connection } from '@solana/web3.js';
 
 export class KafkaManager {
   private static instance: KafkaManager;
@@ -153,7 +154,7 @@ export class KafkaManager {
   async sendRpcFailureToKafka(
     rpcEndpoint: string,
     networkId: string,
-    rpcProviderFn: (provider: ArchiveJsonRpcProvider) => Promise<any>,
+    rpcProviderFn: (provider: ArchiveJsonRpcProvider | Connection) => Promise<any>,
     error: any,
     requestId?: string,
     sessionId?: string,

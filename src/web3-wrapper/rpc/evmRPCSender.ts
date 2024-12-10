@@ -40,13 +40,14 @@ export class EvmRPCSender extends AbstractRPCSender {
     if (!rpcProviderFn) {
       throw new Error('RPC Provider function is not defined');
     }
+    const kafkaManager = KafkaManager.getInstance();
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const selectedRpc = rpcOracle.getNextAvailableRpc();
       if (!selectedRpc) {
         continue;
       }
-      const kafkaManager = KafkaManager.getInstance();
+
       try {
         if (attempt > 0) {
           this.logger.info(
@@ -56,7 +57,6 @@ export class EvmRPCSender extends AbstractRPCSender {
         const start = performance.now();
         const result = await rpcProviderFn(this.getProviderForCall(selectedRpc));
         const end = performance.now();
-        const kafkaManager = KafkaManager.getInstance();
         kafkaManager?.sendRpcResponseTimeToKafka(
           selectedRpc.url,
           end - start,
