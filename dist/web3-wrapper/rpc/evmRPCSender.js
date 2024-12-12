@@ -66,8 +66,10 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                         break;
                 }
             }
-            const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
-            this.logger.error(errorMessage);
+            if (logRpcFailure) {
+                const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
+                this.logger.error(errorMessage);
+            }
             return null;
         });
     }
