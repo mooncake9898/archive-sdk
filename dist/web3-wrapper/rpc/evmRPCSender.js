@@ -33,7 +33,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
     }
-    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true) {
+    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true, logRpcFailure = true) {
         return __awaiter(this, void 0, void 0, function* () {
             const rpcOracle = new rpcOracle_1.RPCOracle(this.networkId, rpcInfos);
             const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
@@ -57,9 +57,11 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                     return result;
                 }
                 catch (error) {
-                    const errorMessage = this.getErrorMessage(error, selectedRpc.url);
-                    this.logger.error(errorMessage);
-                    kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), rpcProviderFn, error, this.requestId, this.sessionId);
+                    if (logRpcFailure) {
+                        const errorMessage = this.getErrorMessage(error, selectedRpc.url);
+                        this.logger.error(errorMessage);
+                        kafkaManager === null || kafkaManager === void 0 ? void 0 : kafkaManager.sendRpcFailureToKafka(selectedRpc.url, String(this.networkId), rpcProviderFn, error, this.requestId, this.sessionId);
+                    }
                     if (!this.shouldRetry(error))
                         break;
                 }
