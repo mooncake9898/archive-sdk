@@ -33,6 +33,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     rpcInfos: RpcInfo[],
     rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     attemptFallback = true,
+    logRpcFailure = true,
   ): Promise<any> {
     const rpcOracle = new RPCOracle(this.networkId, rpcInfos);
     const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
@@ -67,24 +68,28 @@ export class EvmRPCSender extends AbstractRPCSender {
 
         return result;
       } catch (error) {
-        const errorMessage = this.getErrorMessage(error, selectedRpc.url);
-        this.logger.error(errorMessage);
-        kafkaManager?.sendRpcFailureToKafka(
-          selectedRpc.url,
-          String(this.networkId),
-          rpcProviderFn,
-          error,
-          this.requestId,
-          this.sessionId,
-        );
+        if (logRpcFailure) {
+          const errorMessage = this.getErrorMessage(error, selectedRpc.url);
+          this.logger.error(errorMessage);
+          kafkaManager?.sendRpcFailureToKafka(
+            selectedRpc.url,
+            String(this.networkId),
+            rpcProviderFn,
+            error,
+            this.requestId,
+            this.sessionId,
+          );
+        }
         if (!this.shouldRetry(error)) break;
       }
     }
 
-    const errorMessage = `All RPCs failed for networkId: ${
-      this.networkId
-    }, function called: ${rpcProviderFn.toString()}`;
-    this.logger.error(errorMessage);
+    if (logRpcFailure) {
+      const errorMessage = `All RPCs failed for networkId: ${
+        this.networkId
+      }, function called: ${rpcProviderFn.toString()}`;
+      this.logger.error(errorMessage);
+    }
     return null;
   }
 
