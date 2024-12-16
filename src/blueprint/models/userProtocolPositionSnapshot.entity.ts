@@ -1,5 +1,5 @@
-import { UserProtocolPosition } from './userProtocolPosition.entity';
-import { UserProtocolPositionSnapshotOperation } from './userProtocolPositionSnapshotOperation.entity';
+import { UserProtocolPosition } from '../models';
+import { UserProtocolPositionSnapshotOperation } from '../models';
 import BigNumber from 'bignumber.js';
 
 export class UserProtocolPositionSnapshot {
