@@ -1,14 +1,18 @@
-import { OperationType } from './constants';
-import { UserProtocolPositionSnapshot } from './userProtocolPositionSnapshot.entity';
-import { UserProtocolPositionSnapshotOperationToken } from './userProtocolPositionSnapshotOperationToken.entity';
+import { UserProtocolPositionSnapshotOperationToken } from '../models';
+import { UserProtocolPositionSnapshot } from '../models';
+import { OperationType } from '../models';
 import BigNumber from 'bignumber.js';
+import { Relation } from 'typeorm';
+
 export declare class UserProtocolPositionSnapshotOperation {
-    id: number;
-    operationType: OperationType;
-    operationValueUsd: BigNumber;
-    userProtocolPositionSnapshot: UserProtocolPositionSnapshot;
-    userProtocolPositionSnapshotId: number;
-    userProtocolPositionSnapshotOperationTokens: UserProtocolPositionSnapshotOperationToken[];
-    createdAt: Date;
-    updatedAt: Date;
+  id: number;
+  operationType: OperationType;
+  operationValueUsd: BigNumber;
+  adjustmentValueUsd: BigNumber;
+  userProtocolPositionSnapshot: Relation<UserProtocolPositionSnapshot>;
+  userProtocolPositionSnapshotId: number;
+  userProtocolPositionSnapshotOperationTokens: Relation<UserProtocolPositionSnapshotOperationToken[]>;
+  warning: object;
+  createdAt: Date;
+  updatedAt: Date;
 }
