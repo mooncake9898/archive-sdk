@@ -1,4 +1,4 @@
-import { BlueprintMetadata } from '../models/metadata.entity';
+import { BlueprintMetadata } from '../models';
 
 export abstract class MetadataStore {
   public abstract upsert(blueprintId: string, data: object, lastSyncAt: number): Promise<boolean>;
