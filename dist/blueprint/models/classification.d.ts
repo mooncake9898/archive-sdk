@@ -7,11 +7,13 @@ export declare class Classification {
   positionIdentifier: string;
   gasTokenAmount: BigNumber;
   positionShareDetails: PositionShares[];
+  userAddress: string;
   constructor(
     operations: Operation[],
     positionIdentifier: string,
     gasTokenAmount: BigNumber,
     positionShareDetails: PositionShares[],
+    userAddress?: string,
   );
   getSharesAdded(): BigNumber;
   getAdjustmentValueUsd(): BigNumber;

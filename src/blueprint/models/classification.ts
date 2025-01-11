@@ -9,17 +9,20 @@ export class Classification {
   // gas token amount spent for transaction
   gasTokenAmount: BigNumber;
   positionShareDetails: PositionShares[];
+  userAddress: string;
 
   constructor(
     operations: Operation[],
     positionIdentifier: string,
     gasTokenAmount = BigNumber(0),
     positionShareDetails: PositionShares[],
+    userAddress = '',
   ) {
     this.operations = operations;
     this.positionIdentifier = positionIdentifier;
     this.gasTokenAmount = gasTokenAmount;
     this.positionShareDetails = positionShareDetails;
+    this.userAddress = userAddress;
   }
 
   getSharesAdded(): BigNumber {
