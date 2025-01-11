@@ -127,7 +127,7 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
             return obj;
         }
         if (typeof obj === 'string') {
-            return obj
+            return (obj
                 .split('')
                 // Filter out unwanted control characters
                 .filter((char) => {
@@ -137,7 +137,7 @@ let ExternalResponseCacheService = ExternalResponseCacheService_1 = class Extern
                 return !(code <= 0x1f || (code >= 0x7f && code <= 0x9f));
             })
                 .join('')
-                .trim(); // Remove any leading or trailing spaces from the string
+                .trim()); // Remove any leading or trailing spaces from the string
         }
         // Handle arrays
         if (Array.isArray(obj)) {

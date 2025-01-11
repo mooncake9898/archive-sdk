@@ -6,11 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Classification = void 0;
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 class Classification {
-    constructor(operations, positionIdentifier, gasTokenAmount = (0, bignumber_js_1.default)(0), positionShareDetails) {
+    constructor(operations, positionIdentifier, gasTokenAmount = (0, bignumber_js_1.default)(0), positionShareDetails, userAddress = '') {
         this.operations = operations;
         this.positionIdentifier = positionIdentifier;
         this.gasTokenAmount = gasTokenAmount;
         this.positionShareDetails = positionShareDetails;
+        this.userAddress = userAddress;
     }
     getSharesAdded() {
         if (this.operations.length == 0)
