@@ -3,6 +3,7 @@
  */
 export class TransactionDetails {
   constructor(
+    public userAddress: string,
     public txHash: string,
     public blockNumber: number = 0,
     public timestamp: number = 0,

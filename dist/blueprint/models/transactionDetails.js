@@ -5,7 +5,8 @@ exports.TransactionData = exports.TransactionDetailsWithHeadBlock = exports.Tran
  * Represents a TransactionDetails from the blueprint
  */
 class TransactionDetails {
-    constructor(txHash, blockNumber = 0, timestamp = 0) {
+    constructor(userAddress, txHash, blockNumber = 0, timestamp = 0) {
+        this.userAddress = userAddress;
         this.txHash = txHash;
         this.blockNumber = blockNumber;
         this.timestamp = timestamp;
