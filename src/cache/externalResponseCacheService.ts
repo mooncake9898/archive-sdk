@@ -120,19 +120,20 @@ export class ExternalResponseCacheService {
     }
 
     if (typeof obj === 'string') {
-      return obj
-        .split('')
-        // Filter out unwanted control characters
-        .filter((char) => {
-          const code = char.charCodeAt(0); // Get the Unicode code of the character
-          // Remove characters that are control characters (<= 0x1f)
-          // or extended control characters (between 0x7f and 0x9f)
-          return !(code <= 0x1f || (code >= 0x7f && code <= 0x9f));
-        })
-        .join('')
-        .trim();  // Remove any leading or trailing spaces from the string
+      return (
+        obj
+          .split('')
+          // Filter out unwanted control characters
+          .filter((char) => {
+            const code = char.charCodeAt(0); // Get the Unicode code of the character
+            // Remove characters that are control characters (<= 0x1f)
+            // or extended control characters (between 0x7f and 0x9f)
+            return !(code <= 0x1f || (code >= 0x7f && code <= 0x9f));
+          })
+          .join('')
+          .trim()
+      ); // Remove any leading or trailing spaces from the string
     }
-
 
     // Handle arrays
     if (Array.isArray(obj)) {
