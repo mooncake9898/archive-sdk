@@ -29,8 +29,8 @@ class ExchangePrice {
             return yield this.priceApi.getPriceOf(tokenAddress, poolProviderKey, block);
         });
     }
-    getReceiptTokenPriceAt(tokenAddress, poolProviderKey, blockNumber = 0) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getReceiptTokenPriceAt(tokenAddress_1, poolProviderKey_1) {
+        return __awaiter(this, arguments, void 0, function* (tokenAddress, poolProviderKey, blockNumber = 0) {
             return yield this.priceApi.getLpPriceAt(tokenAddress, poolProviderKey, blockNumber);
         });
     }

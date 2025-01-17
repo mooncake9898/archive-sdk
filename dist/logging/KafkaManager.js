@@ -72,8 +72,8 @@ class KafkaManager {
     get consumer() {
         return this._consumer;
     }
-    sendResponseTimeToKafka(config, status, blueprintId, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
-        return __awaiter(this, void 0, void 0, function* () {
+    sendResponseTimeToKafka(config_1, status_1, blueprintId_1, requestId_1) {
+        return __awaiter(this, arguments, void 0, function* (config, status, blueprintId, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
             const timestamp = Math.floor(new Date().getTime());
@@ -109,8 +109,8 @@ class KafkaManager {
             return '';
         }
     }
-    sendRpcResponseTimeToKafka(rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
-        return __awaiter(this, void 0, void 0, function* () {
+    sendRpcResponseTimeToKafka(rpcUrl_1, requestDuration_1, requestId_1) {
+        return __awaiter(this, arguments, void 0, function* (rpcUrl, requestDuration, requestId, responseTimesTopic = types_1.Queues.RESPONSE_TIMES, sessionId) {
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
             const timestamp = Math.floor(new Date().getTime());
@@ -136,8 +136,8 @@ class KafkaManager {
         });
     }
     sendRpcFailureToKafka(rpcEndpoint, networkId, rpcProviderFn, error, requestId, sessionId) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             if (!['staging', 'production'].includes(process.env.NODE_ENV))
                 return;
             const timestamp = Math.floor(new Date().getTime());
@@ -159,8 +159,8 @@ class KafkaManager {
             this.sendMessage(types_1.Queues.RPC_FAILURE, rpcCallAsJson);
         });
     }
-    sendLogs(msgs, topic = types_1.Queues.LOGS) {
-        return __awaiter(this, void 0, void 0, function* () {
+    sendLogs(msgs_1) {
+        return __awaiter(this, arguments, void 0, function* (msgs, topic = types_1.Queues.LOGS) {
             yield this.sendMessage(topic, msgs.map((msg) => {
                 return {
                     key: msg.blueprintId,

@@ -2,8 +2,8 @@ export declare enum OperationType {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
   INCOME = 'income',
-  TRANSFER_IN = 'transfer_in',
-  TRANSFER_OUT = 'transfer_out',
+  TRANSFER_IN = 'transfer_in', //covers ONLY LP tokens and/or NFTs that are sent from protocol to user
+  TRANSFER_OUT = 'transfer_out', //covers ONLY LP tokens and/or NFTs that are sent from user to protocol
   NULL_OP = 'null_op',
 }
 export declare enum TokenTag {

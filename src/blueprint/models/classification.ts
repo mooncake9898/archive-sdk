@@ -28,7 +28,7 @@ export class Classification {
   getSharesAdded(): BigNumber {
     if (this.operations.length == 0) return BigNumber(0);
 
-    return this.operations.reduce((toll, operation) => toll.plus(operation.amountAdded), BigNumber(0));
+    return this.operations.reduce((toll, operation) => toll.plus(operation.userSharesAdded), BigNumber(0));
   }
 
   getAdjustmentValueUsd(): BigNumber {
