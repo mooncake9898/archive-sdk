@@ -33,8 +33,8 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
     }
-    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true, logRpcFailure = true) {
-        return __awaiter(this, void 0, void 0, function* () {
+    executeCallOrSend(rpcInfos_1, rpcProviderFn_1) {
+        return __awaiter(this, arguments, void 0, function* (rpcInfos, rpcProviderFn, attemptFallback = true, logRpcFailure = true) {
             const rpcOracle = new rpcOracle_1.RPCOracle(this.networkId, rpcInfos);
             const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
             if (!rpcProviderFn) {

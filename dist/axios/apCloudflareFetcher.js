@@ -33,8 +33,8 @@ class ApCloudflareFetcher {
             },
         };
     }
-    fetch(axios, url, headers = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
+    fetch(axios_1, url_1) {
+        return __awaiter(this, arguments, void 0, function* (axios, url, headers = {}) {
             for (let attempt = 0; attempt < this.maxRetries; attempt++) {
                 try {
                     return yield axios.get(url, {

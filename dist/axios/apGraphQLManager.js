@@ -43,9 +43,9 @@ class ApGraphQLManager {
       }
     }
     */
-    executeGraphQLQueryOrThrowError(payload, variables = {}, blockNumber) {
-        var _a, _b, _c, _d;
-        return __awaiter(this, void 0, void 0, function* () {
+    executeGraphQLQueryOrThrowError(payload_1) {
+        return __awaiter(this, arguments, void 0, function* (payload, variables = {}, blockNumber) {
+            var _a, _b, _c, _d;
             const axiosInstance = this.selectAxiosInstance(blockNumber);
             // Might throw errors if status not like 2xx or if casting to T yields an error.
             try {
