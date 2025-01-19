@@ -22,6 +22,7 @@ export enum CHAINID {
   AVAX_PCHAIN = '-9797',
   ZKSYNC = '324',
   SCROLL = '534352',
+  METIS = '1088',
 }
 
 export const MAX_RETRY_ATTEMPTS = 3;

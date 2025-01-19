@@ -26,6 +26,7 @@ var CHAINID;
     CHAINID["AVAX_PCHAIN"] = "-9797";
     CHAINID["ZKSYNC"] = "324";
     CHAINID["SCROLL"] = "534352";
+    CHAINID["METIS"] = "1088";
 })(CHAINID || (exports.CHAINID = CHAINID = {}));
 exports.MAX_RETRY_ATTEMPTS = 3;
 exports.ONE_MIN = 1000 * 60;
