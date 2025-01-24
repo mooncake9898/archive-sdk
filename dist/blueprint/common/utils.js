@@ -12,15 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNilPositionShares = createNilPositionShares;
-exports.formatAsDecimalAwareString = formatAsDecimalAwareString;
-exports.getBlockTag = getBlockTag;
-exports.populateUserListFromSubgraph = populateUserListFromSubgraph;
+exports.populateUserListFromSubgraph = exports.getBlockTag = exports.formatAsDecimalAwareString = exports.createNilPositionShares = void 0;
 const positionShares_1 = require("../models/positionShares");
 const bignumber_js_1 = __importDefault(require("bignumber.js"));
 function createNilPositionShares() {
     return [new positionShares_1.PositionShares('', 0, null, false)];
 }
+exports.createNilPositionShares = createNilPositionShares;
 function formatAsDecimalAwareString(balance, decimals = 18) {
     try {
         const bigNumberWithDecimals = (0, bignumber_js_1.default)(balance).dividedBy((0, bignumber_js_1.default)(10).exponentiatedBy(decimals));
@@ -31,11 +29,13 @@ function formatAsDecimalAwareString(balance, decimals = 18) {
         return null;
     }
 }
+exports.formatAsDecimalAwareString = formatAsDecimalAwareString;
 function getBlockTag(blockNumber) {
     if (blockNumber > 0)
         return { blockTag: blockNumber };
     return {};
 }
+exports.getBlockTag = getBlockTag;
 function populateUserListFromSubgraph(getUserListFn, blueprintKey, fromTimestamp) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -60,4 +60,5 @@ function populateUserListFromSubgraph(getUserListFn, blueprintKey, fromTimestamp
         }
     });
 }
+exports.populateUserListFromSubgraph = populateUserListFromSubgraph;
 //# sourceMappingURL=utils.js.map

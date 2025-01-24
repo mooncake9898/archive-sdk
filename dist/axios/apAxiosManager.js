@@ -80,8 +80,8 @@ class ApAxiosManager {
         });
     }
     responseInterceptorOnRejected(error) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
             this.calculateRequestDuration(error.config);
             const status = (_b = (_a = error.response) === null || _a === void 0 ? void 0 : _a.status) !== null && _b !== void 0 ? _b : 400;
             yield this.logResponseTime(error.config, status);

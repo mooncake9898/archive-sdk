@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSafeTransactionHash = getSafeTransactionHash;
-exports.getContractFromEthers = getContractFromEthers;
+exports.getContractFromEthers = exports.getSafeTransactionHash = void 0;
 const ethers_1 = require("ethers");
 const ethers_v6_1 = require("ethers-v6");
 /**
@@ -15,6 +14,7 @@ function getSafeTransactionHash(receipt) {
     }
     return receipt.hash;
 }
+exports.getSafeTransactionHash = getSafeTransactionHash;
 /**
  * Safely returns contract abstraction that could be from v5 or v6 of ethers.js api
  * @param {string} address
@@ -28,6 +28,7 @@ function getContractFromEthers(address, abi, provider) {
     }
     return new ethers_1.ethers.Contract(address, abi, provider);
 }
+exports.getContractFromEthers = getContractFromEthers;
 function isEthersV6Provider(provider) {
     return typeof provider.broadcastTransaction === 'function';
 }

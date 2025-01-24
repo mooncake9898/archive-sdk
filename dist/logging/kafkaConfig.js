@@ -13,7 +13,7 @@ exports.defaultKafkaConfig = {
     },
     brokers: [process.env.KAFKA_BROKER_URL],
     sasl: {
-        mechanism: 'plain', // 'scram-sha-256'
+        mechanism: 'plain',
         username: process.env.KAFKA_PRODUCER_USERNAME,
         password: process.env.KAFKA_PRODUCER_PASSWORD,
     },

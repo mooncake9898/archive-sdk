@@ -11,11 +11,11 @@ export declare enum CHAINID {
   OPTIMISM = '10',
   MUMBAI = '80001',
   AURORA = '1313161554',
-  SOLANA = '-8768', // following defi price convention
+  SOLANA = '-8768',
   EVMOS = '9001',
   EVMOS_COSMOS = 'evmos_9001-2',
   OSMOSIS = 'osmosis-1',
-  COSMOSHUB = '-1061702', // following defi price convention
+  COSMOSHUB = '-1061702',
   RONIN = '2020',
   BEACON = 'eth2',
   BASE = '8453',

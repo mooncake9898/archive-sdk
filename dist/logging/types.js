@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Queues = void 0;
-exports.multiply = multiply;
+exports.Queues = exports.multiply = void 0;
 function multiply(a, b) {
     return a * b;
 }
+exports.multiply = multiply;
 var Queues;
 (function (Queues) {
     Queues["LOGS"] = "logs";
