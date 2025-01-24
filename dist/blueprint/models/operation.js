@@ -14,13 +14,13 @@ class Operation {
     // tokens sent from protocol to user
     outputTokens, 
     /** Amount of 'shares' added/removed in this operation, it's positive if shares were added, negative if shares were removed */
-    amountAdded = (0, bignumber_js_1.default)(0), 
+    userSharesAdded = (0, bignumber_js_1.default)(0), 
     /** The fee (in USD) that the protocol took from the user as a platform toll (ie. liquidation fee) */
     adjustmentValueUsd = 0) {
         this.operation = operation;
         this.inputTokens = inputTokens;
         this.outputTokens = outputTokens;
-        this.amountAdded = amountAdded;
+        this.userSharesAdded = userSharesAdded;
         this.adjustmentValueUsd = adjustmentValueUsd;
     }
 }

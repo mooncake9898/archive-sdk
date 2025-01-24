@@ -22,6 +22,7 @@ export declare enum CHAINID {
   AVAX_PCHAIN = '-9797',
   ZKSYNC = '324',
   SCROLL = '534352',
+  METIS = '1088',
 }
 export declare const MAX_RETRY_ATTEMPTS = 3;
 export declare const ONE_MIN: number;
