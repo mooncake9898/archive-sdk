@@ -27,6 +27,7 @@ var CHAINID;
     CHAINID["ZKSYNC"] = "324";
     CHAINID["SCROLL"] = "534352";
     CHAINID["METIS"] = "1088";
+    CHAINID["BERACHAIN"] = "80084";
 })(CHAINID || (exports.CHAINID = CHAINID = {}));
 exports.MAX_RETRY_ATTEMPTS = 3;
 exports.ONE_MIN = 1000 * 60;
