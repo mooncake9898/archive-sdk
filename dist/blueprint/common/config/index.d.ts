@@ -20,3 +20,4 @@ export * from './solanaNetworkConfig';
 export * from './xdaiNetworkConfig';
 export * from './scrollNetworkConfig';
 export * from './zkSyncNetworkConfig';
+export * from './berachainNetworkConfig';

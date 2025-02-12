@@ -36,4 +36,5 @@ __exportStar(require("./solanaNetworkConfig"), exports);
 __exportStar(require("./xdaiNetworkConfig"), exports);
 __exportStar(require("./scrollNetworkConfig"), exports);
 __exportStar(require("./zkSyncNetworkConfig"), exports);
+__exportStar(require("./berachainNetworkConfig"), exports);
 //# sourceMappingURL=index.js.map
