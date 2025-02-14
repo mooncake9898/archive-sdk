@@ -23,6 +23,8 @@ export enum CHAINID {
   ZKSYNC = '324',
   SCROLL = '534352',
   METIS = '1088',
+  BERACHAIN_TESTNET = '80084',
+  BERACHAIN = '80094',
 }
 
 export const MAX_RETRY_ATTEMPTS = 3;
