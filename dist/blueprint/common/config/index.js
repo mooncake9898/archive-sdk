@@ -37,4 +37,5 @@ __exportStar(require("./xdaiNetworkConfig"), exports);
 __exportStar(require("./scrollNetworkConfig"), exports);
 __exportStar(require("./zkSyncNetworkConfig"), exports);
 __exportStar(require("./berachainNetworkConfig"), exports);
+__exportStar(require("./berachainTestNetworkConfig"), exports);
 //# sourceMappingURL=index.js.map

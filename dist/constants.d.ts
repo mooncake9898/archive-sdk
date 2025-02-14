@@ -23,7 +23,8 @@ export declare enum CHAINID {
     ZKSYNC = "324",
     SCROLL = "534352",
     METIS = "1088",
-    BERACHAIN = "80084"
+    BERACHAIN_TESTNET = "80084",
+    BERACHAIN = "80094"
 }
 export declare const MAX_RETRY_ATTEMPTS = 3;
 export declare const ONE_MIN: number;
