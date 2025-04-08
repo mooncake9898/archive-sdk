@@ -34,6 +34,7 @@ export class EvmRPCSender extends AbstractRPCSender {
     rpcProviderFn?: (provider: ArchiveJsonRpcProvider) => Promise<any>,
     attemptFallback = true,
     logRpcFailure = true,
+    throwException = false,
   ): Promise<any> {
     const rpcOracle = new RPCOracle(this.networkId, rpcInfos);
     const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
@@ -84,13 +85,18 @@ export class EvmRPCSender extends AbstractRPCSender {
       }
     }
 
-    if (logRpcFailure) {
-      const errorMessage = `All RPCs failed for networkId: ${
-        this.networkId
-      }, function called: ${rpcProviderFn.toString()}`;
+    let errorMessage = '';
+
+    if (logRpcFailure || throwException) {
+      errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
       this.logger.error(errorMessage);
     }
-    return null;
+
+    if (throwException) {
+      throw new Error(errorMessage);
+    } else {
+      return null;
+    }
   }
 
   private isOptimismOrBaseNetwork(networkId: string): boolean {

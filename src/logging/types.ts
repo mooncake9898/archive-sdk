@@ -37,7 +37,6 @@ export interface RpcFailureQueue extends BaseQueue {
   calledFunction: string;
   errorMessage: string;
   errorCode: number;
-
 }
 export interface ExternalAPICallQueue extends BaseQueue, BlueprintSessionQueue {
   url: string;
