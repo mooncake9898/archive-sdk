@@ -6,4 +6,3 @@ export enum BlockchainPlatform {
   NEAR = 'near',
   MOVE = 'move',
 }
-

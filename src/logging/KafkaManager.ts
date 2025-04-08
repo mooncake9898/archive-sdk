@@ -2,8 +2,8 @@ import { ArchiveJsonRpcProvider } from '../web3-wrapper/networkConfigurations';
 import { MyRequestConfig } from './config/axios.config';
 import { defaultKafkaConfig } from './kafkaConfig';
 import { BaseQueue, LogQueue, Queues, ResponseTimeQueue, RpcFailureQueue } from './types';
-import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
 import { Connection } from '@solana/web3.js';
+import { Consumer, Kafka, KafkaConfig, Message, Producer } from 'kafkajs';
 
 export class KafkaManager {
   private static instance: KafkaManager;

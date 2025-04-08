@@ -33,7 +33,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
     }
-    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true, logRpcFailure = true) {
+    executeCallOrSend(rpcInfos, rpcProviderFn, attemptFallback = true, logRpcFailure = true, throwException = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const rpcOracle = new rpcOracle_1.RPCOracle(this.networkId, rpcInfos);
             const maxAttempts = attemptFallback ? rpcOracle.getRpcCount() : 1;
@@ -66,11 +66,17 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
                         break;
                 }
             }
-            if (logRpcFailure) {
-                const errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
+            let errorMessage = '';
+            if (logRpcFailure || throwException) {
+                errorMessage = `All RPCs failed for networkId: ${this.networkId}, function called: ${rpcProviderFn.toString()}`;
                 this.logger.error(errorMessage);
             }
-            return null;
+            if (throwException) {
+                throw new Error(errorMessage);
+            }
+            else {
+                return null;
+            }
         });
     }
     isOptimismOrBaseNetwork(networkId) {
