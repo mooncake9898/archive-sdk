@@ -10,6 +10,7 @@ export declare class EvmRPCSender extends AbstractRPCSender {
   private sessionId?;
   private logger;
   private timeoutMilliseconds;
+  private providerCache;
   constructor(
     networkId: number | string,
     networkName: string,
@@ -26,5 +27,6 @@ export declare class EvmRPCSender extends AbstractRPCSender {
   ): Promise<any>;
   private isOptimismOrBaseNetwork;
   getProviderForCall(selectedRpc: RpcInfo): ArchiveJsonRpcProvider;
+  private generateCacheKey;
   private getProxyRPCProvider;
 }

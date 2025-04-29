@@ -15,6 +15,7 @@ import { performance } from 'perf_hooks';
 export class EvmRPCSender extends AbstractRPCSender {
   private logger: Logger;
   private timeoutMilliseconds = 10000;
+  private providerCache: Map<string, ArchiveJsonRpcProvider> = new Map();
 
   constructor(
     private networkId: number | string,
@@ -104,23 +105,45 @@ export class EvmRPCSender extends AbstractRPCSender {
   }
 
   public getProviderForCall(selectedRpc: RpcInfo): ArchiveJsonRpcProvider {
+    // Generate a cache key that includes relevant properties
+    const cacheKey = this.generateCacheKey(selectedRpc);
+
+    // Check if we already have a provider for this RPC URL in the cache
+    const cachedProvider = this.providerCache.get(cacheKey);
+    if (cachedProvider) {
+      return cachedProvider;
+    }
+
+    // Create a new provider if not in cache
+    let provider: ArchiveJsonRpcProvider;
+
     if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
-      return asL2Provider(
+      provider = asL2Provider(
         new ethers.providers.StaticJsonRpcProvider({
           url: selectedRpc.url,
           timeout: this.timeoutMilliseconds,
         }),
       );
+    } else if (selectedRpc.requiresProxy && this.proxyServerUrl) {
+      provider = this.getProxyRPCProvider(selectedRpc.url);
+    } else {
+      provider = new ethers.providers.StaticJsonRpcProvider({
+        url: selectedRpc.url,
+        timeout: this.timeoutMilliseconds,
+      });
     }
 
-    if (selectedRpc.requiresProxy && this.proxyServerUrl) {
-      return this.getProxyRPCProvider(selectedRpc.url);
-    }
+    // Store the provider in the cache
+    this.providerCache.set(cacheKey, provider);
 
-    return new ethers.providers.StaticJsonRpcProvider({
-      url: selectedRpc.url,
-      timeout: this.timeoutMilliseconds,
-    });
+    return provider;
+  }
+
+  private generateCacheKey(rpcInfo: RpcInfo): string {
+    // Create a unique key based on URL and whether proxy is required
+    const networkIdStr = String(this.networkId);
+    const proxyStr = rpcInfo.requiresProxy ? `proxy:${this.proxyServerUrl}` : 'no-proxy';
+    return `${networkIdStr}:${rpcInfo.url}:${proxyStr}`;
   }
 
   private getProxyRPCProvider(rpcUrl: string): JsonRpcProvider {
