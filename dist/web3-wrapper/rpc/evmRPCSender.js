@@ -29,6 +29,7 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         this.requestId = requestId;
         this.sessionId = sessionId;
         this.timeoutMilliseconds = 10000;
+        this.providerCache = new Map();
         this.logger = logger_1.ArchiveLogger.getLogger();
         if (this.requestId)
             this.logger.addContext(logger_1.REQUEST_ID, this.requestId);
@@ -83,19 +84,39 @@ class EvmRPCSender extends abstractRPCSender_1.AbstractRPCSender {
         return networkId === constants_1.CHAINID.OPTIMISM || networkId === constants_1.CHAINID.BASE;
     }
     getProviderForCall(selectedRpc) {
+        // Generate a cache key that includes relevant properties
+        const cacheKey = this.generateCacheKey(selectedRpc);
+        // Check if we already have a provider for this RPC URL in the cache
+        const cachedProvider = this.providerCache.get(cacheKey);
+        if (cachedProvider) {
+            return cachedProvider;
+        }
+        // Create a new provider if not in cache
+        let provider;
         if (this.isOptimismOrBaseNetwork(String(this.networkId))) {
-            return (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
+            provider = (0, sdk_1.asL2Provider)(new ethers_1.ethers.providers.StaticJsonRpcProvider({
                 url: selectedRpc.url,
                 timeout: this.timeoutMilliseconds,
             }));
         }
-        if (selectedRpc.requiresProxy && this.proxyServerUrl) {
-            return this.getProxyRPCProvider(selectedRpc.url);
+        else if (selectedRpc.requiresProxy && this.proxyServerUrl) {
+            provider = this.getProxyRPCProvider(selectedRpc.url);
         }
-        return new ethers_1.ethers.providers.StaticJsonRpcProvider({
-            url: selectedRpc.url,
-            timeout: this.timeoutMilliseconds,
-        });
+        else {
+            provider = new ethers_1.ethers.providers.StaticJsonRpcProvider({
+                url: selectedRpc.url,
+                timeout: this.timeoutMilliseconds,
+            });
+        }
+        // Store the provider in the cache
+        this.providerCache.set(cacheKey, provider);
+        return provider;
+    }
+    generateCacheKey(rpcInfo) {
+        // Create a unique key based on URL and whether proxy is required
+        const networkIdStr = String(this.networkId);
+        const proxyStr = rpcInfo.requiresProxy ? `proxy:${this.proxyServerUrl}` : 'no-proxy';
+        return `${networkIdStr}:${rpcInfo.url}:${proxyStr}`;
     }
     getProxyRPCProvider(rpcUrl) {
         const fetchReq = new ethers_v6_1.FetchRequest(rpcUrl);
